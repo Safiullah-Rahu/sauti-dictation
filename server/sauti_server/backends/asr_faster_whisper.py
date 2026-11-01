@@ -11,6 +11,7 @@ from typing import Any
 import numpy as np
 
 from ..config import AsrSection
+from ..devices import resolve_compute_type, resolve_device
 from .base import AsrResult, Cancelled
 
 log = logging.getLogger("sauti.asr")
@@ -30,29 +31,30 @@ def _is_hallucination(text: str) -> bool:
 class FasterWhisperBackend:
     name = "faster_whisper"
 
-    def __init__(self, cfg: AsrSection, device: str = "cpu"):
+    def __init__(self, cfg: AsrSection):
         from faster_whisper import WhisperModel
 
         self.cfg = cfg
-        self.device = device
+        self.device = resolve_device(cfg.device)
+        self.compute_type = resolve_compute_type(cfg.compute_type, self.device)
         t0 = time.time()
-        self.model = WhisperModel(cfg.model, device=device, compute_type=cfg.compute_type,
-                                  cpu_threads=cfg.cpu_threads, num_workers=cfg.workers)
-        self.partial_model = None
-        if cfg.partial_model:
-            self.partial_model = WhisperModel(cfg.partial_model, device=device, compute_type=cfg.compute_type,
-                                              cpu_threads=cfg.partial_cpu_threads, num_workers=1)
-        self.lang_models = {lang: WhisperModel(path, device=device, compute_type=cfg.compute_type,
-                                               cpu_threads=cfg.cpu_threads, num_workers=cfg.workers)
-                            for lang, path in cfg.per_language.items()}
+
+        def load(path: str, threads: int, workers: int):
+            return WhisperModel(path, device=self.device, device_index=cfg.device_index,
+                                compute_type=self.compute_type, cpu_threads=threads, num_workers=workers)
+
+        self.model = load(cfg.model, cfg.cpu_threads, cfg.workers)
+        self.partial_model = load(cfg.partial_model, cfg.partial_cpu_threads, 1) if cfg.partial_model else None
+        self.lang_models = {lang: load(path, cfg.cpu_threads, cfg.workers) for lang, path in cfg.per_language.items()}
         self.load_s = time.time() - t0
-        log.info("ASR loaded %s (%s, %d threads x %d workers) in %.1fs", cfg.model, cfg.compute_type,
-                 cfg.cpu_threads, cfg.workers, self.load_s)
+        log.info("ASR loaded %s on %s (%s, %d workers) in %.1fs", cfg.model, self.device, self.compute_type,
+                 cfg.workers, self.load_s)
 
     def describe(self) -> dict[str, Any]:
-        return {"backend": self.name, "model": self.cfg.model, "compute_type": self.cfg.compute_type,
+        return {"backend": self.name, "model": self.cfg.model, "compute_type": self.compute_type,
                 "partial_model": self.cfg.partial_model or None, "per_language": self.cfg.per_language,
-                "workers": self.cfg.workers, "cpu_threads": self.cfg.cpu_threads, "device": self.device}
+                "workers": self.cfg.workers, "cpu_threads": self.cfg.cpu_threads if self.device == "cpu" else None,
+                "device": self.device if self.device == "cpu" else f"cuda:{self.cfg.device_index}"}
 
     def _options(self, partial: bool, hints: str | None) -> dict[str, Any]:
         return dict(

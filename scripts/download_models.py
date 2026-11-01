@@ -11,6 +11,7 @@ Sets (licence in brackets):
     asr-large-v3   Whisper large-v3, CTranslate2                    [MIT]
     asr-small      Whisper small, CTranslate2 (fast partial preview)[MIT]
     llm-qwen3-4b   Qwen3-4B-Instruct-2507 GGUF Q4_K_M               [Apache-2.0]
+    llm-qwen3-30b  Qwen3-30B-A3B-Instruct-2507 GGUF Q4_K_M (24 GB GPU) [Apache-2.0]
     mt-madlad-3b   MADLAD-400 3B MT, CTranslate2 int8               [Apache-2.0]
 """
 from __future__ import annotations
@@ -25,6 +26,7 @@ SETS = {
     "asr-large-v3": ("snapshot", "Systran/faster-whisper-large-v3", "faster-whisper-large-v3", None),
     "asr-small": ("snapshot", "Systran/faster-whisper-small", "faster-whisper-small", None),
     "llm-qwen3-4b": ("file", "unsloth/Qwen3-4B-Instruct-2507-GGUF", "gguf", "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"),
+    "llm-qwen3-30b": ("file", "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF", "gguf", "Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf"),
     "mt-madlad-3b": ("snapshot", "Nextcloud-AI/madlad400-3b-mt-ct2-int8", "madlad400-3b-mt-ct2-int8", None),
 }
 DEFAULT = ["asr-turbo", "asr-small", "llm-qwen3-4b"]

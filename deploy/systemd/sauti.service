@@ -7,6 +7,8 @@ Wants=network-online.target
 User=sauti
 Group=sauti
 Environment=SAUTI_CONFIG=/etc/sauti/sauti.toml
+# GPU only: LD_LIBRARY_PATH for the pip-installed CUDA libraries (written by install.sh).
+EnvironmentFile=-/etc/sauti/gpu.env
 ExecStart=/opt/sauti/venv/bin/sauti-server run
 Restart=on-failure
 RestartSec=3

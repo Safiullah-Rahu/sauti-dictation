@@ -122,8 +122,66 @@ Models.
 * `journalctl -u sauti -u sauti-llm` for service logs.
 * `GET /v1/health` for an external uptime check.
 
-## 9. Adding a GPU later
+## 9. GPU
 
-Install the NVIDIA driver in the VM (PCI passthrough), then set `asr.compute_type = "float16"`
-with device CUDA support (CTranslate2 CUDA wheels) and run llama.cpp's CUDA build. No client
-changes. See [models.md](models.md) for when this is worth it.
+The server, the installer and the dashboard support an NVIDIA GPU. With `device = "auto"` (the
+default) the speech models use the GPU as soon as one is visible and fall back to the CPU
+otherwise, so a GPU can be added without changing the clients or the configuration.
+
+**What a GPU changes.** Whisper runs in float16 on the GPU (the full large-v3 model becomes
+affordable), live previews come from turbo instead of small, the cleanup LLM runs entirely on
+the GPU (`-ngl 99`), and more dictations run in parallel. `deploy/sauti-gpu.toml` is the profile.
+
+**Card.** 16–24 GB of VRAM is comfortable: Whisper large-v3 (fp16, ~3.5 GB) + turbo (~1.8 GB) +
+Qwen3-4B (~3 GB) fit in 16 GB with room for parallel work; a 24 GB card can also run
+Qwen3-30B-A3B (`scripts/download_models.py --set llm-qwen3-30b`) for stronger cleanup and
+translation. Low-profile options: RTX 4000 SFF Ada (20 GB, 70 W). Check the server has a free PCIe
+x16 slot, airflow and power-supply headroom.
+
+### 9.1 Pass the GPU through (Proxmox host)
+
+```bash
+# 1. IOMMU on (AMD): add to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub, then update-grub
+amd_iommu=on iommu=pt
+# 2. vfio modules
+printf 'vfio
+vfio_iommu_type1
+vfio_pci
+' >> /etc/modules
+# 3. keep the host's own drivers off the card
+printf 'blacklist nouveau
+blacklist nvidia
+' > /etc/modprobe.d/blacklist-gpu.conf
+update-initramfs -u -k all && reboot
+# 4. find the card and create (or update) the VM
+lspci -nn | grep -i nvidia             # e.g. 01:00.0 VGA ... and 01:00.1 Audio ...
+GPU_PCI=0000:01:00 VMID=210 ./deploy/proxmox/create-vm.sh
+#    existing VM instead: qm set 210 --machine q35 --hostpci0 0000:01:00,pcie=1
+```
+
+The GPU is then dedicated to this VM; other guests cannot use it at the same time.
+
+### 9.2 Inside the VM
+
+```bash
+# Debian 12: enable contrib/non-free, then
+sudo apt install -y linux-headers-amd64 nvidia-driver && sudo reboot
+# (Ubuntu 24.04: sudo ubuntu-drivers install && sudo reboot)
+nvidia-smi                              # the card must be listed
+sudo GPU=1 ./deploy/install.sh          # CUDA libraries, large-v3, GPU llama.cpp, GPU profile
+sudo -u sauti SAUTI_CONFIG=/etc/sauti/sauti.toml $(cat /etc/sauti/gpu.env) /opt/sauti/venv/bin/sauti-server doctor
+```
+
+`GPU=1` installs cuBLAS and cuDNN for CTranslate2 from PyPI (no system CUDA toolkit needed),
+writes `/etc/sauti/gpu.env` and `/etc/sauti/llm.env` (`-ngl 99 --parallel 4`), installs
+llama.cpp's prebuilt Vulkan build (or `LLAMA_BACKEND=cuda` to compile the CUDA build), downloads
+Whisper large-v3 and, on a fresh install, uses `deploy/sauti-gpu.toml`. On an existing install,
+set `device = "auto"` (or `"cuda"`), `compute_type = "auto"` and raise `workers` in
+`/etc/sauti/sauti.toml` yourself.
+
+`sauti-server doctor` prints the GPUs CTranslate2 can see, the device and compute type each model
+will use, and whether the model files and the LLM server are reachable. The admin dashboard's
+Server card shows GPU utilisation, memory and temperature.
+
+`device = "cuda"` (as in the GPU profile) refuses to start if the GPU disappears, which makes a
+driver problem obvious; `device = "auto"` keeps the service up on the CPU instead.

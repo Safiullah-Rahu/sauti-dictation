@@ -40,6 +40,8 @@ on its own Proxmox server.
   failure log, audit log.
 * **Replaceable models.** Recogniser, cleanup model and translator are configuration on the
   server. Upgrading a model never requires a new client release.
+* **CPU today, GPU-ready.** Runs CPU-only; with an NVIDIA card passed through to the VM, speech
+  models switch to the GPU automatically (`GPU=1 ./deploy/install.sh`, `sauti-server doctor`).
 
 ## Demo
 

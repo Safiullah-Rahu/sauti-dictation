@@ -32,8 +32,10 @@ class ServerSection:
 class AsrSection:
     backend: str = "faster_whisper"  # faster_whisper | fake
     model: str = "large-v3-turbo"  # model name or local path
-    compute_type: str = "int8"
-    cpu_threads: int = 4
+    device: str = "auto"  # auto (GPU if visible, else CPU) | cpu | cuda
+    device_index: int = 0  # which GPU when there are several
+    compute_type: str = "auto"  # auto = float16 on GPU, int8 on CPU
+    cpu_threads: int = 4  # CPU only
     workers: int = 2  # concurrent transcriptions
     beam_size: int = 1
     vad: bool = True
@@ -65,7 +67,9 @@ class LlmSection:
 class TranslateSection:
     backend: str = "llm"  # llm | ct2 | fake | none
     model_path: str = ""  # for ct2 (MADLAD-400 / NLLB)
-    compute_type: str = "int8"
+    device: str = "auto"
+    device_index: int = 0
+    compute_type: str = "auto"
     cpu_threads: int = 4
     workers: int = 1
     beam_size: int = 2

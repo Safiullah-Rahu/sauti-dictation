@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from ..config import TranslateSection
+from ..devices import resolve_compute_type, resolve_device
 
 NLLB_CODES = {"en": "eng_Latn", "so": "som_Latn", "ar": "arb_Arab", "sw": "swh_Latn"}
 _SENT = re.compile(r"(?<=[.!?؟])\s+")
@@ -25,14 +26,17 @@ class Ct2Translator:
         path = Path(cfg.model_path)
         self.family = "nllb" if "nllb" in path.name.lower() else "madlad"
         sp_file = path / ("sentencepiece.bpe.model" if self.family == "nllb" else "spiece.model")
+        self.device = resolve_device(cfg.device)
+        self.compute_type = resolve_compute_type(cfg.compute_type, self.device)
         self.sp = sentencepiece.SentencePieceProcessor(model_file=str(sp_file))
-        self.tr = ctranslate2.Translator(str(path), device="cpu", compute_type=cfg.compute_type,
-                                         inter_threads=cfg.workers, intra_threads=cfg.cpu_threads)
+        self.tr = ctranslate2.Translator(str(path), device=self.device, device_index=cfg.device_index,
+                                         compute_type=self.compute_type, inter_threads=cfg.workers,
+                                         intra_threads=cfg.cpu_threads)
         self.pool = ThreadPoolExecutor(max_workers=cfg.workers, thread_name_prefix="mt")
 
     def describe(self) -> dict[str, Any]:
         return {"backend": self.name, "family": self.family, "model_path": self.cfg.model_path,
-                "compute_type": self.cfg.compute_type}
+                "compute_type": self.compute_type, "device": self.device}
 
     def _translate_sync(self, text: str, src: str, tgt: str) -> str:
         sentences = [s for s in _SENT.split(text.strip()) if s]

@@ -1,0 +1,60 @@
+# Sauti configuration for a VM with an NVIDIA GPU passed through (16-24 GB recommended).
+# Installed by `GPU=1 ./deploy/install.sh` when no /etc/sauti/sauti.toml exists yet.
+# Differences from the CPU profile are marked "GPU:".
+
+[server]
+host = "127.0.0.1"
+port = 8700
+data_dir = "/var/lib/sauti"
+public_url = "https://dictate.example.lan"
+trust_proxy = true
+log_level = "info"
+
+[asr]
+backend = "faster_whisper"
+# GPU: the full large-v3 model is affordable on a GPU and is more accurate than turbo for
+# lower-resource languages; switch back to turbo if latency matters more than accuracy.
+model = "/opt/sauti/models/faster-whisper-large-v3"
+device = "cuda"             # GPU: fail loudly if the GPU disappears ("auto" would fall back to CPU)
+device_index = 0
+compute_type = "float16"    # GPU: or "int8_float16" to halve memory
+workers = 4                 # GPU: more parallel transcriptions
+beam_size = 1
+vad = true
+languages = ["en", "so", "ar", "sw"]
+# GPU: live previews from turbo instead of small - accurate enough to read while speaking.
+partial_model = "/opt/sauti/models/faster-whisper-large-v3-turbo"
+# per_language = { so = "/opt/sauti/models/<somali-model>" }
+
+[llm]
+backend = "openai_compat"   # llama-server started with -ngl 99 (see /etc/sauti/llm.env)
+base_url = "http://127.0.0.1:8081/v1"
+model = "qwen3-4b-instruct"
+max_concurrency = 4         # GPU: match llama-server --parallel 4
+timeout_s = 15
+cleanup_languages = ["en"]  # re-measure per language when using a larger model
+
+[translate]
+backend = "llm"
+# backend = "ct2"
+# model_path = "/opt/sauti/models/madlad400-3b-mt-ct2-int8"
+# device = "cuda"
+
+[scheduler]
+max_queued_finals = 32
+max_queued_per_user = 3
+final_timeout_s = 30
+partials = true
+partial_interval_s = 0.8    # GPU: previews can refresh more often
+interactive_max_s = 90
+
+[limits]
+max_utterance_s = 120
+daily_audio_minutes = 240
+max_devices_per_user = 10
+
+[privacy]
+default_history = false
+default_retention_days = 30
+max_retention_days = 365
+result_cache_s = 600

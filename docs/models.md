@@ -104,6 +104,10 @@ cores with AVX-512, which CTranslate2 and llama.cpp both use.
 other guests running. Add a GPU only if the measured final-text p95 at five concurrent users
 is above the agreed target.
 
+**GPU support is built in** (`device = "auto"`, `deploy/sauti-gpu.toml`, `GPU=1 ./deploy/install.sh`,
+see [deployment.md](deployment.md#9-gpu)). It has not been measured yet: the development machine's GPU
+is out of service, so the GPU path is covered by unit tests and the installer, not by benchmarks.
+
 **If a GPU is justified (estimate):** a 16–24 GB NVIDIA card (for example RTX 4000 SFF Ada
 20 GB — low profile, 70 W — or RTX 4060 Ti 16 GB / used RTX 3090 if the case and power supply
 allow) runs Whisper large-v3 (not just turbo) and an 8B cleanup model with sub-second final

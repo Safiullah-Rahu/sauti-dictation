@@ -38,7 +38,8 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=40)
     ap.add_argument("--threads", type=int, default=6)
     ap.add_argument("--beam", type=int, default=1)
-    ap.add_argument("--compute-type", default="int8")
+    ap.add_argument("--compute-type", default="auto", help="auto = float16 on GPU, int8 on CPU")
+    ap.add_argument("--device", default="auto", help="auto | cpu | cuda")
     ap.add_argument("--langs", default=",".join(LANGS))
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--pin", default="", help="logical CPUs to pin to, e.g. 0-11 (6 P-cores with HT)")
@@ -49,10 +50,14 @@ def main() -> None:
 
     from faster_whisper import WhisperModel
 
-    model = WhisperModel(args.model, device="cpu", compute_type=args.compute_type, cpu_threads=args.threads)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "server"))
+    from sauti_server.devices import resolve_compute_type, resolve_device
+    device = resolve_device(args.device)
+    args.compute_type = resolve_compute_type(args.compute_type, device)
+    model = WhisperModel(args.model, device=device, compute_type=args.compute_type, cpu_threads=args.threads)
     langs = args.langs.split(",")
     results = {"model": Path(args.model).name, "threads": args.threads, "beam": args.beam,
-               "compute_type": args.compute_type, "n_per_lang": args.n, "pinning": pinned, "langs": {}, "samples": []}
+               "compute_type": args.compute_type, "device": device, "n_per_lang": args.n, "pinning": pinned, "langs": {}, "samples": []}
     for lang in langs:
         clips = load(args.fleurs, lang)[: args.n]
         stats = {"wer_e": 0, "wer_n": 0, "cer_e": 0, "cer_n": 0, "auto_wer_e": 0, "lid_ok": 0, "audio_s": 0.0,

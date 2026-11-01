@@ -5,9 +5,14 @@ After=network.target
 [Service]
 User=sauti
 Group=sauti
+# CPU defaults; /etc/sauti/llm.env (written by install.sh) overrides them, e.g. on a GPU:
+#   LLAMA_MODEL=/opt/sauti/models/gguf/Qwen3-4B-Instruct-2507-Q4_K_M.gguf
+#   LLAMA_ARGS=-ngl 99 --parallel 4 -c 16384
+Environment=LLAMA_MODEL=/opt/sauti/models/gguf/Qwen3-4B-Instruct-2507-Q4_K_M.gguf
+Environment="LLAMA_ARGS=-c 8192 --parallel 2 -t 4"
+EnvironmentFile=-/etc/sauti/llm.env
 # Listens on 127.0.0.1 only: never expose the model server to the network.
-ExecStart=/opt/sauti/llama/llama-server -m /opt/sauti/models/gguf/Qwen3-4B-Instruct-2507-Q4_K_M.gguf \
-    --host 127.0.0.1 --port 8081 -c 8192 --parallel 2 -t 4 --no-webui
+ExecStart=/opt/sauti/llama/llama-server -m ${LLAMA_MODEL} --host 127.0.0.1 --port 8081 --no-webui $LLAMA_ARGS
 Restart=on-failure
 RestartSec=3
 Nice=-5

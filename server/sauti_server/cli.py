@@ -3,6 +3,7 @@
     sauti-server run --config /etc/sauti/sauti.toml
     sauti-server create-user --config ... --admin alice
     sauti-server backup --config ... --dest /var/backups/sauti
+    sauti-server doctor --config ...        # devices, models and services check
 """
 from __future__ import annotations
 
@@ -46,6 +47,8 @@ def main(argv: list[str] | None = None) -> None:
     bk = sub.add_parser("backup", help="consistent copy of the database while running")
     bk.add_argument("--dest", required=True)
 
+    sub.add_parser("doctor", help="check GPU/CPU, model paths and the LLM server")
+
     args = ap.parse_args(argv)
     cfg = load_config(args.config)
 
@@ -58,6 +61,9 @@ def main(argv: list[str] | None = None) -> None:
                     log_level=cfg.server.log_level, proxy_headers=cfg.server.trust_proxy, ws_ping_interval=20,
                     ws_ping_timeout=20)
         return
+
+    if args.cmd == "doctor":
+        sys.exit(doctor(cfg))
 
     from .db import Store
 
@@ -86,6 +92,54 @@ def main(argv: list[str] | None = None) -> None:
         out = dest / time.strftime("sauti-%Y%m%d-%H%M%S.db")
         store.backup_to(out)
         print(out)
+
+
+def doctor(cfg) -> int:
+    """Print what the server would use, and return non-zero if something required is missing."""
+    import json
+    import urllib.request
+
+    from . import devices
+
+    problems = 0
+    info = devices.describe()
+    print("GPUs visible to CTranslate2:", info.get("cuda_devices", 0))
+    for g in info.get("gpus", []):
+        print(f"  - GPU {g['index']}: {g['name']}, {g['memory_used_mb']:.0f}/{g['memory_total_mb']:.0f} MB used")
+    for name, section in (("speech recognition", cfg.asr), ("translation", cfg.translate)):
+        if name == "translation" and cfg.translate.backend != "ct2":
+            print(f"{name}: via {cfg.translate.backend}")
+            continue
+        try:
+            dev = devices.resolve_device(section.device)
+            print(f"{name}: device={dev} compute_type={devices.resolve_compute_type(section.compute_type, dev)}")
+        except Exception as e:
+            problems += 1
+            print(f"{name}: PROBLEM - {e}")
+    paths = [("asr.model", cfg.asr.model), ("asr.partial_model", cfg.asr.partial_model)]
+    paths += [(f"asr.per_language.{k}", v) for k, v in cfg.asr.per_language.items()]
+    if cfg.translate.backend == "ct2":
+        paths.append(("translate.model_path", cfg.translate.model_path))
+    for key, value in paths:
+        if not value:
+            continue
+        local = Path(value).expanduser()
+        if local.is_absolute() or value.startswith((".", "/")):
+            ok = (local / "model.bin").exists()
+            problems += 0 if ok else 1
+            print(f"{key}: {value} {'ok' if ok else 'MISSING model.bin'}")
+        else:
+            print(f"{key}: {value} (downloaded by name on first start)")
+    if cfg.llm.backend == "openai_compat":
+        root = cfg.llm.base_url.rstrip("/").removesuffix("/v1")
+        try:
+            with urllib.request.urlopen(root + "/health", timeout=3) as r:
+                print(f"llm: {cfg.llm.base_url} reachable ({json.loads(r.read() or b'{}').get('status', 'ok')})")
+        except Exception as e:
+            problems += 1
+            print(f"llm: {cfg.llm.base_url} NOT reachable ({e.__class__.__name__}) - clean mode falls back to rules")
+    print("OK" if not problems else f"{problems} problem(s) found")
+    return 1 if problems else 0
 
 
 if __name__ == "__main__":

@@ -7,6 +7,8 @@ from typing import Any
 
 import psutil
 
+from .devices import gpu_snapshot
+
 _START = time.time()
 _proc = psutil.Process(os.getpid())
 psutil.cpu_percent(interval=None)
@@ -51,4 +53,5 @@ def system_snapshot(data_dir: str) -> dict[str, Any]:
                    "percent": vm.percent},
         "disk": disk_info,
         "processes": procs,
+        "gpus": gpu_snapshot(),
     }
