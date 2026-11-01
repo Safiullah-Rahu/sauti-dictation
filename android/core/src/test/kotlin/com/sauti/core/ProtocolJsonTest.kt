@@ -90,6 +90,14 @@ class ProtocolJsonTest {
     }
 
     @Test
+    fun ready_acceptsWholeNumbersSentAsFloats() {
+        val ready = ProtocolJson.decodeServer(
+            """{"type":"ready","session_id":"s","profile_version":1,"limits":{"max_utterance_seconds":120.0,"sample_rate":16000}}""",
+        ) as ServerMessage.Ready
+        assertEquals(120, ready.limits.maxUtteranceSeconds)
+    }
+
+    @Test
     fun unknownTypes_andGarbage_doNotThrow() {
         assertEquals(ServerMessage.Unknown("hint"), ProtocolJson.decodeServer("""{"type":"hint","x":1}"""))
         assertTrue(ProtocolJson.decodeServer("not json") is ServerMessage.Malformed)

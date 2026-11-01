@@ -31,7 +31,9 @@ base_url = "http://127.0.0.1:8081/v1"
 model = "qwen3-4b-instruct"
 max_concurrency = 2         # match llama-server --parallel
 timeout_s = 20
-cleanup_languages = ["en", "so", "ar", "sw"]
+# Measured (docs/benchmarks.md): the 4B LLM improves English cleanup but not Somali, Arabic or
+# Swahili, which get rule-based cleanup until a stronger model is validated.
+cleanup_languages = ["en"]
 
 [translate]
 backend = "llm"             # or "ct2" with model_path = "/opt/sauti/models/madlad400-3b-mt-ct2-int8"

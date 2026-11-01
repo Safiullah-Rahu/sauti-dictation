@@ -108,7 +108,7 @@ class DictationSocket:
             "type": "ready", "session_id": self.session.id, "user": principal.public_user,
             "profile_version": int(user["profile_version"]) + self.st.store.org_version(),
             "server_version": __version__,
-            "limits": {"max_utterance_seconds": self.st.cfg.limits.max_utterance_s, "sample_rate": SAMPLE_RATE},
+            "limits": {"max_utterance_seconds": int(self.st.cfg.limits.max_utterance_s), "sample_rate": SAMPLE_RATE},
         })
         try:
             await self._loop()

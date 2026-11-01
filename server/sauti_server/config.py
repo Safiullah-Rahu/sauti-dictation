@@ -57,7 +57,8 @@ class LlmSection:
     timeout_s: float = 20.0
     max_concurrency: int = 2  # should match llama-server --parallel
     # Languages for which the LLM pass is attempted; others get rule-based cleanup only.
-    cleanup_languages: list[str] = field(default_factory=lambda: list(LANGUAGES))
+    # Default from the cleanup benchmark: Qwen3-4B helps English, not Somali/Arabic/Swahili.
+    cleanup_languages: list[str] = field(default_factory=lambda: ["en"])
 
 
 @dataclass

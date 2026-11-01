@@ -1,7 +1,17 @@
 package com.sauti.core.protocol
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonPrimitive
 
 /** Protocol version sent in `hello` (docs/protocol.md, section 3.1). */
 const val PROTOCOL_VERSION: Int = 1
@@ -21,9 +31,24 @@ data class UserInfo(
     val role: String? = null,
 )
 
+/** Reads 120 or 120.0: a server may serialise whole numbers as floats. */
+object LenientIntSerializer : KSerializer<Int> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LenientInt", PrimitiveKind.INT)
+
+    override fun deserialize(decoder: Decoder): Int {
+        val json = decoder as? JsonDecoder ?: return decoder.decodeInt()
+        val primitive = json.decodeJsonElement().jsonPrimitive
+        return primitive.intOrNull ?: primitive.double.toInt()
+    }
+
+    override fun serialize(encoder: Encoder, value: Int) = encoder.encodeInt(value)
+}
+
 @Serializable
 data class Limits(
+    @Serializable(with = LenientIntSerializer::class)
     @SerialName("max_utterance_seconds") val maxUtteranceSeconds: Int = 120,
+    @Serializable(with = LenientIntSerializer::class)
     @SerialName("sample_rate") val sampleRate: Int = SAMPLE_RATE_HZ,
 )
 

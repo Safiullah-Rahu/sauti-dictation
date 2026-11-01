@@ -1,0 +1,21 @@
+{
+  "sentences": 20,
+  "systems": {
+    "llm:qwen3-4b-instruct": {
+      "so-en": {
+        "chrf": 23.8,
+        "latency_ms_p50": 6197,
+        "latency_ms_p95": 10702
+      }
+    }
+  },
+  "examples": [
+    {
+      "system": "llm:qwen3-4b-instruct",
+      "dir": "so-en",
+      "src": "U.N. waxa ay rajeynayaan in ay soo gabagabeeyaan lacago lagu caawinayo dalalka ay kulaylka caalamka saameeyay si ay ula tacaalan dhibteeda.",
+      "hyp": "The U.N. is being criticized for not taking adequate action against the ongoing violence that is escalating.",
+      "ref": "The U.N. also hopes to finalize a fund to help countries affected by global warming to cope with the impacts."
+    }
+  ]
+}
