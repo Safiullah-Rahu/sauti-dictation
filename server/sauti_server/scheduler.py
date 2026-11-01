@@ -215,7 +215,7 @@ class Stage:
             if job.started is None:
                 self._remove(job)
             job.cancel.set()
-            self.counters["timeouts"] += 1
+            self.counters["dropped" if job.priority == Priority.PARTIAL else "timeouts"] += 1
             job.fail(JobTimeout(self.name))
             raise JobTimeout(self.name) from None
         except asyncio.CancelledError:
@@ -295,7 +295,8 @@ class Stage:
                     job.future.set_result(value)
                 self.counters["completed"] += 1
             except asyncio.TimeoutError:
-                self.counters["timeouts"] += 1
+                # A late live preview is simply dropped; only real work counts as a timeout.
+                self.counters["dropped" if job.priority == Priority.PARTIAL else "timeouts"] += 1
                 job.fail(JobTimeout(self.name))
             except asyncio.CancelledError:
                 job.fail(JobCancelled())
@@ -303,7 +304,7 @@ class Stage:
                     fut.add_done_callback(lambda f: f.cancelled() or f.exception())
                 raise
             except Exception as exc:  # backend errors travel to the waiter
-                self.counters["failed"] += 1
+                self.counters["cancelled" if job.cancel.is_set() else "failed"] += 1
                 job.fail(exc)
             finally:
                 self.active -= 1

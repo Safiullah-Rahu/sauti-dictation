@@ -22,7 +22,17 @@ from .text.llm_tasks import cleanup_messages, max_tokens_for, translate_messages
 log = logging.getLogger("sauti.pipeline")
 
 StatusFn = Callable[[str, int | None], Awaitable[None]]
-SILENCE_RMS = 0.0025
+SILENCE_PEAK = 0.001  # about -60 dBFS: digital silence or an unplugged microphone
+TARGET_PEAK = 0.5
+MAX_GAIN = 40.0  # +32 dB
+
+
+def level(audio: np.ndarray) -> tuple[np.ndarray, float]:
+    """Automatic gain for quiet microphones; returns (audio, original peak)."""
+    peak = float(np.abs(audio).max()) if len(audio) else 0.0
+    if SILENCE_PEAK <= peak < TARGET_PEAK / 2:
+        audio = audio * min(MAX_GAIN, TARGET_PEAK / peak)
+    return audio, peak
 
 
 @dataclass
@@ -50,6 +60,7 @@ class Result:
     notices: list[str] = field(default_factory=list)
     timings_ms: dict[str, int] = field(default_factory=dict)
     guard_reasons: list[str] = field(default_factory=list)
+    confidence: float = 1.0
 
 
 def pcm16_to_float(pcm: bytes | bytearray | memoryview) -> np.ndarray:
@@ -69,7 +80,7 @@ class Pipeline:
                         key: str | None = None) -> AsrResult:
         hints = dictionary.hint_text(req.entries)
         allowed = self.cfg.asr.languages
-        audio = req.audio
+        audio, _ = level(req.audio)
 
         def work(cancel):
             return self.backends.asr.transcribe(audio, lang=req.lang, allowed=allowed, hints=hints,
@@ -85,14 +96,15 @@ class Pipeline:
         timings: dict[str, int] = {"queue": 0, "asr": 0, "cleanup": 0, "translate": 0}
         notices: list[str] = []
 
-        if len(req.audio) == 0 or float(np.sqrt(np.mean(req.audio ** 2))) < SILENCE_RMS:
+        audio, peak = level(req.audio)
+        if peak < SILENCE_PEAK:
             return Result("", "", req.lang, 0.0, req.mode, None, notices=["no_speech"],
                           timings_ms={**timings, "total": int((time.monotonic() - t0) * 1000)})
 
         asr_job = self.asr_stage.submit(
             req.user_id, req.priority, timeout_s=max(1.0, deadline - time.monotonic()),
             fn=lambda cancel: self.backends.asr.transcribe(
-                req.audio, lang=req.lang, allowed=self.cfg.asr.languages, hints=dictionary.hint_text(req.entries),
+                audio, lang=req.lang, allowed=self.cfg.asr.languages, hints=dictionary.hint_text(req.entries),
                 cancel=cancel, partial=False))
         pos = self.asr_stage.position(asr_job)
         if pos > 1:
@@ -110,7 +122,11 @@ class Pipeline:
 
         lang = asr.lang
         raw = dictionary.apply_aliases(asr.text.strip(), req.entries)
-        result = Result(raw, raw, lang, asr.lang_prob, req.mode, None, notices=notices, timings_ms=timings)
+        result = Result(raw, raw, lang, asr.lang_prob, req.mode, None, notices=notices, timings_ms=timings,
+                        confidence=asr.confidence)
+        low_confidence = asr.confidence < self.cfg.asr.low_confidence
+        if low_confidence:
+            notices.append("low_confidence")
 
         if req.mode in ("clean", "translate"):
             t = time.monotonic()
@@ -120,7 +136,11 @@ class Pipeline:
             notices.extend(extra)
             timings["cleanup"] = int((time.monotonic() - t) * 1000)
 
-        if req.mode == "translate" and lang and req.target_lang and req.target_lang != lang:
+        if req.mode == "translate" and low_confidence and lang != req.target_lang:
+            # Translating misrecognised words produces fluent invented text; return the transcript instead.
+            notices.append("not_translated")
+            result.target_lang = None
+        elif req.mode == "translate" and lang and req.target_lang and req.target_lang != lang:
             t = time.monotonic()
             await on_status("translating", None)
             result.source_text = result.text

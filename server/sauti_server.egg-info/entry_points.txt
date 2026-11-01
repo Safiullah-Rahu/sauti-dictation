@@ -1,0 +1,2 @@
+[console_scripts]
+sauti-server = sauti_server.cli:main

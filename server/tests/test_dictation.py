@@ -44,6 +44,15 @@ def test_translate_mode_uses_llm(client):
         assert final["text"].startswith("[translated]") and final["source_text"] and final["target_lang"] == "en"
 
 
+def test_low_confidence_is_not_translated(client):
+    """Misrecognised speech must not be turned into fluent invented text by translation."""
+    with session(client, device_token(client)) as ws:
+        say(ws, "[low] onapo mpugia sime mtuwalia", lang="sw", mode="translate", target_lang="en")
+        final = until(ws, "final")
+    assert "not_translated" in final["notices"] and "low_confidence" in final["notices"]
+    assert not final["text"].startswith("[translated]") and final["confidence"] < 0.5
+
+
 def test_guard_fallback_when_llm_rewrites(client):
     client.fakes.llm.override = "Totally different words that were never spoken by anyone."
     with session(client, device_token(client)) as ws:
@@ -69,6 +78,20 @@ def test_silence_is_no_speech(client):
         ws.send_json({"type": "end", "utterance_id": uid})
         final = until(ws, "final")
         assert final["text"] == "" and "no_speech" in final["notices"]
+
+
+def test_quiet_microphone_is_still_transcribed(client):
+    """Very quiet speech (peak -46 dBFS) must reach the recogniser, not be dropped as silence."""
+    import numpy as np
+    cm_calls = client.fakes.asr.calls
+    with session(client, device_token(client)) as ws:
+        uid = utt()
+        ws.send_json({"type": "start", "utterance_id": uid, "mode": "verbatim"})
+        quiet = (0.005 * np.sin(np.arange(32000) * 2 * np.pi * 200 / 16000) * 32767).astype("<i2").tobytes()
+        ws.send_bytes(quiet)
+        ws.send_json({"type": "end", "utterance_id": uid})
+        until(ws, "final")
+    assert client.fakes.asr.calls > cm_calls
 
 
 def test_partial_preview_arrives_while_speaking(client):

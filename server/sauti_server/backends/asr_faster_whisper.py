@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import math
 import re
 import threading
 import time
@@ -84,12 +85,17 @@ class FasterWhisperBackend:
             segments, info = self.lang_models[detected].transcribe(audio, language=detected, **opts)
 
         parts: list[str] = []
+        logprob_sum = weight = 0.0
         for seg in segments:  # lazy: decoding happens while iterating
             if cancel.is_set():
                 raise Cancelled()
             parts.append(seg.text)
+            w = max(0.1, seg.end - seg.start)
+            logprob_sum += seg.avg_logprob * w
+            weight += w
         text = "".join(parts).strip()
         if _is_hallucination(text):
             text = ""
+        confidence = math.exp(logprob_sum / weight) if weight else 0.0
         return AsrResult(text=text, lang=detected, lang_prob=prob, duration_s=duration, restricted=restricted,
-                         no_speech=not text)
+                         no_speech=not text, confidence=confidence)

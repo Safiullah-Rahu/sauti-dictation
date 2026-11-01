@@ -64,7 +64,7 @@ async def main() -> None:
     llm = OpenAICompatLlm(LlmSection(base_url=args.llm, model=args.model, timeout_s=120))
     report = {"llm": args.model, "langs": {}, "injection": [], "examples": []}
     for lang in ["en", "so", "ar", "sw"]:
-        clips = load(args.fleurs, lang)[200:200 + args.n]
+        clips = load(args.fleurs, lang)[30:30 + args.n]  # text only; any sentences will do
         agg = {"rules_e": 0, "llm_e": 0, "final_e": 0, "n": 0, "fallbacks": 0, "lat": [], "reasons": {}}
         for c in clips:
             ref = normalise(c.text, lang)

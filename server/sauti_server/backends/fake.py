@@ -63,6 +63,8 @@ class FakeAsr:
         if decoded is None:
             return AsrResult("", lang, 0.0, len(audio) / 16000, no_speech=True)
         spoken_lang, text = decoded
+        if text.startswith("[low]"):  # tests: simulate a poorly recognised utterance
+            return AsrResult(text[5:].strip(), lang or spoken_lang, 0.9, len(audio) / 16000, confidence=0.2)
         if partial:
             text = " ".join(text.split()[: max(1, len(text.split()) // 2)])
         return AsrResult(text, lang or spoken_lang, 0.99, len(audio) / 16000)

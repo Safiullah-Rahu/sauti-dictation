@@ -61,7 +61,7 @@ class Receiving:
 
 def _final_message(utt: str, r: Result) -> dict[str, Any]:
     msg = {"type": "final", "utterance_id": utt, "text": r.text, "raw": r.raw, "lang": r.lang,
-           "lang_prob": round(r.lang_prob, 3), "mode": r.mode, "target_lang": r.target_lang, "replayed": False,
+           "lang_prob": round(r.lang_prob, 3), "confidence": round(r.confidence, 3), "mode": r.mode, "target_lang": r.target_lang, "replayed": False,
            "timings_ms": r.timings_ms, "notices": r.notices}
     if r.source_text is not None:
         msg["source_text"] = r.source_text

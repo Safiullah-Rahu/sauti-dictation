@@ -43,6 +43,9 @@ class AsrSection:
     partial_cpu_threads: int = 2
     # Route specific languages to another model (e.g. a Somali fine-tune): {"so": "/models/x"}
     per_language: dict[str, str] = field(default_factory=dict)
+    # Below this recogniser confidence (0..1) the result is flagged, and translate mode returns the
+    # transcript untranslated rather than risk translating misrecognised words into invented text.
+    low_confidence: float = 0.5
 
 
 @dataclass

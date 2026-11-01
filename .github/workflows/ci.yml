@@ -13,6 +13,7 @@ permissions:
 jobs:
   server-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -26,9 +27,9 @@ jobs:
         run: |
           pip install -e "server[dev]" uvicorn websockets
       - name: Server tests
-        run: pytest -q server/tests
+        run: pytest -q --timeout 120 server/tests
       - name: Desktop network-client tests (against a live server with fake models)
-        run: pytest -q desktop/tests/test_client.py
+        run: pytest -q --timeout 120 desktop/tests/test_client.py
 
   desktop:
     strategy:
@@ -42,6 +43,7 @@ jobs:
           - os: macos-15-intel
             artifact: sauti-desktop-macos-x64
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6

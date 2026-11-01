@@ -33,13 +33,13 @@
       stat("Today", `${o.today.audio_minutes} min`, `${o.today.utterances} dictations · ${o.today.errors} errors`),
       stat("Events (24 h)", errs, Object.entries(o.events_24h || {}).map(([k, v]) => `${k} ${v}`).join(" · ") || "none"),
     );
-    const q = head($("#queues"), ["Stage", "Workers", "Queued (final / preview / long)", "Wait p50/p95 ms#", "Run p50/p95 ms#", "Done / failed / timeouts / busy#"]);
+    const q = head($("#queues"), ["Stage", "Workers", "Queued (final / preview / long)", "Wait p50/p95 ms#", "Run p50/p95 ms#", "Done / failed / timeouts / busy / previews dropped#"]);
     for (const s of o.stages) {
       q.append(h("tr", {},
         h("td", {}, s.name), h("td", {}, `${s.active} of ${s.workers} busy`),
         h("td", {}, `${s.queued.final} / ${s.queued.partial} / ${s.queued.batch}`),
         h("td", { class: "num" }, ms(s.wait.final)), h("td", { class: "num" }, ms(s.service.final)),
-        h("td", { class: "num" }, `${s.counters.completed} / ${s.counters.failed} / ${s.counters.timeouts} / ${s.counters.rejected}`)));
+        h("td", { class: "num" }, `${s.counters.completed} / ${s.counters.failed} / ${s.counters.timeouts} / ${s.counters.rejected} / ${s.counters.dropped}`)));
     }
     const sys = o.system;
     const memPct = sys.memory.percent;

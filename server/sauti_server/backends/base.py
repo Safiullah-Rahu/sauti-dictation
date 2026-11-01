@@ -24,6 +24,7 @@ class AsrResult:
     duration_s: float
     restricted: bool = False  # detected language was outside the allowed set
     no_speech: bool = False
+    confidence: float = 1.0  # geometric-mean token probability of the decoded text, 0..1
 
 
 class AsrBackend(Protocol):

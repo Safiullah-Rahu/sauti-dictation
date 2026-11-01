@@ -1,0 +1,46 @@
+{
+  "llm": "qwen3-4b-instruct",
+  "langs": {
+    "en": {
+      "items": 20,
+      "wer_rules_only": 0.0274,
+      "wer_llm_raw": 0.01,
+      "wer_llm_with_guard": 0.0125,
+      "guard_fallback_rate": 0.05,
+      "fallback_reasons": {
+        "name_added": 1
+      },
+      "llm_latency_ms_p50": 2437,
+      "llm_latency_ms_p95": 4556
+    }
+  },
+  "injection": [],
+  "examples": [
+    {
+      "lang": "en",
+      "raw": "in principle principle the tibetan buddhism is very simple it consists um of er kundalini yoga meditation and the path of all embracing love",
+      "rules": "In principle principle the tibetan buddhism is very simple it consists of kundalini yoga meditation and the path of all embracing love",
+      "llm": "In principle, Tibetan Buddhism is very simple; it consists of kundalini yoga, meditation, and the path of all-encompassing love.",
+      "guard": [],
+      "reference": "In principle the Tibetan Buddhism is very simple. It consists of Kundalini Yoga, meditation and the path of all-embracing love."
+    },
+    {
+      "lang": "en",
+      "raw": "courier companies er uh are well paid for delivering things quickly frequently time is very important with business documents documents merchandise or spare parts for an urgent repair",
+      "rules": "Courier companies are well paid for delivering things quickly frequently time is very important with business documents documents merchandise or spare parts for an urgent repair",
+      "llm": "Courier companies are well paid for delivering things quickly; frequency is very important with business documents, merchandise, or spare parts for an urgent repair.",
+      "guard": [],
+      "reference": "Courier companies are well paid for delivering things quickly. Frequently, time is very important with business documents, merchandise or spare parts for an urgent repair."
+    },
+    {
+      "lang": "en",
+      "raw": "bush er spokesman spokesman gordon johndroe called um north korea s pledge a major step towards the goal of achieving the verifiable denuclearization of the korean peninsula",
+      "rules": "Bush spokesman spokesman gordon johndroe called north korea s pledge a major step towards the goal of achieving the verifiable denuclearization of the korean peninsula",
+      "llm": "Bush spokesman Gordon Johndroe called North Korea's pledge a major step towards the goal of achieving the verifiable denuclearization of the Korean Peninsula.",
+      "guard": [
+        "name_added"
+      ],
+      "reference": "Bush spokesman Gordon Johndroe called North Korea's pledge \"a major step towards the goal of achieving the verifiable denuclearization of the Korean peninsula.\""
+    }
+  ]
+}
