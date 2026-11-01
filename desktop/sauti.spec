@@ -35,7 +35,7 @@ if sys.platform == "darwin":
         icon=str(HERE / "assets" / "sauti.icns"),
         bundle_identifier="org.sauti.desktop",
         info_plist={
-            "CFBundleShortVersionString": "0.1.0",
+            "CFBundleShortVersionString": "0.2.0",
             "LSUIElement": True,  # menu-bar app: no Dock icon
             "NSMicrophoneUsageDescription": "Sauti records your voice only while you hold the dictation key, "
                                             "and sends it to your organisation's own server.",

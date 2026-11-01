@@ -65,7 +65,9 @@ on its own Proxmox server.
 </tr>
 </table>
 
-**Video:** [`docs/media/sauti-demo.mp4`](docs/media/sauti-demo.mp4) (about 2 minutes).
+**Explainer (80 s):** [`docs/media/sauti-explainer.mp4`](docs/media/sauti-explainer.mp4) — the product in one pass: desktop dictation, modes and languages, the Android keyboard, the meaning check, administration and the CPU/GPU deployment.
+
+**Real-run demo (2 min):** [`docs/media/sauti-demo.mp4`](docs/media/sauti-demo.mp4).
 
 It shows the real Windows tray app dictating into an editor through the real server and models
 on a CPU-only workstation, then the admin dashboard under a five-user load and the user portal.
