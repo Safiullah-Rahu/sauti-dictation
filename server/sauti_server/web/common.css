@@ -118,6 +118,7 @@ main { padding: .9rem 2rem 3rem; max-width: 1360px; }
 /* ---------- surfaces ---------- */
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.15rem 1.25rem; box-shadow: var(--shadow); }
 .card + .card, .grid + .card, .card + .grid, .grid + .grid { margin-top: 1rem; }
+.grid > .card { margin-top: 0; }
 .card-head { display: flex; align-items: center; gap: .6rem; margin-bottom: .9rem; }
 .card-head .sub { color: var(--muted); font-size: .84rem; }
 .grid { display: grid; gap: 1rem; }
@@ -131,7 +132,8 @@ main { padding: .9rem 2rem 3rem; max-width: 1360px; }
 .kpi .value { font-size: 1.7rem; font-weight: 700; letter-spacing: -.02em; margin-top: .35rem; font-variant-numeric: tabular-nums; }
 .kpi .value small { font-size: .95rem; font-weight: 600; color: var(--muted); margin-left: .2rem; }
 .kpi .sub { color: var(--muted); font-size: .82rem; margin-top: .15rem; }
-.kpi svg.spark { position: absolute; right: 0; bottom: 0; width: 55%; height: 46px; opacity: .9; }
+.kpi > :not(svg) { position: relative; z-index: 1; }
+.kpi svg.spark { position: absolute; right: 0; bottom: 0; width: 46%; height: 30px; opacity: .55; }
 .notice { display: flex; gap: .7rem; align-items: flex-start; border: 1px solid var(--line); background: var(--panel-2); padding: .75rem .95rem; border-radius: var(--radius-sm); font-size: .88rem; color: var(--ink-2); }
 .notice .icon { color: var(--accent); margin-top: 1px; }
 .notice.warn { background: var(--warn-soft); border-color: transparent; }
@@ -232,7 +234,7 @@ svg.spark polygon { fill: var(--accent-glow); stroke: none; }
 .stage .stat b { display: block; font-size: 1.02rem; font-variant-numeric: tabular-nums; }
 .stage .stat span { font-size: .74rem; color: var(--muted); }
 .bars { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding-top: .5rem; }
-.bars .b { flex: 1; display: grid; align-content: end; gap: .25rem; text-align: center; font-size: .7rem; color: var(--muted); min-width: 0; }
+.bars .b { flex: 0 1 56px; display: grid; align-content: end; gap: .25rem; text-align: center; font-size: .7rem; color: var(--muted); min-width: 0; }
 .bars .b span { display: block; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--accent-2), var(--accent)); min-height: 2px; }
 
 /* ---------- overlays ---------- */
@@ -307,3 +309,6 @@ svg.spark polygon { fill: var(--accent-glow); stroke: none; }
   .kpi .value { font-size: 1.5rem; }
 }
 .stack > .seg, label.field > .seg { justify-self: start; }
+.mini-charts { margin-top: 1rem; }
+.mini-chart { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .65rem .8rem .4rem; }
+.mini-chart svg.spark { display: block; width: 100%; height: 64px; margin-top: .3rem; }

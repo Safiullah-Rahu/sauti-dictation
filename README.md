@@ -47,12 +47,21 @@ on its own Proxmox server.
 
 <table>
 <tr>
-<td width="52%"><img src="docs/media/desktop-dictation.jpg" alt="Dictated text inserted into an editor by the Windows tray app"></td>
-<td><img src="docs/media/admin-under-load.jpg" alt="Admin dashboard while five users dictate"></td>
+<td colspan="2"><img src="docs/media/admin-under-load.jpg" alt="Admin dashboard while five users dictate"></td>
 </tr>
 <tr>
-<td><sub>Spoken: <i>"Um, hi Sarah. I wanted to let you know that the, uh, the shipment of forty boxes will not arrive on Monday. It will, um, arrive on Thursday the fourteenth instead."</i> — inserted after clean-up. (15.8 s on a busy CPU-only workstation; see benchmarks.)</sub></td>
-<td><sub>Admin overview while five simulated users dictate: live sessions, fair queues, server load. No dictated text is visible to administrators.</sub></td>
+<td colspan="2"><sub>Admin overview while five simulated users dictate on a CPU-only workstation: live sessions, fair queues with wait and run times, server meters (GPU meters appear when a card is present), model status. No dictated text is visible to administrators.</sub></td>
+</tr>
+<tr>
+<td width="52%"><img src="docs/media/desktop-dictation.jpg" alt="Dictated text inserted into an editor by the Windows tray app"></td>
+<td><img src="docs/media/portal.jpg" alt="User portal: dictation page"></td>
+</tr>
+<tr>
+<td><sub>Spoken: <i>"Um, hi Sarah. I wanted to let you know that the, uh, the shipment of forty boxes will not arrive on Monday. It will, um, arrive on Thursday the fourteenth instead."</i> — inserted after clean-up (recorded before the status-pill redesign).</sub></td>
+<td><sub>User portal: try dictation, settings that sync to every device, personal dictionary, encrypted history, phone pairing. Light and dark themes.</sub></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><img src="docs/media/desktop-pill.png" width="420" alt="Desktop status pill: listening with live waveform, processing, inserted, server unavailable"><br><sub>The desktop status pill: live waveform while the microphone is open, then processing, inserted, or a clear offline message.</sub></td>
 </tr>
 </table>
 

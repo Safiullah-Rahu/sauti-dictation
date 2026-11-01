@@ -74,6 +74,13 @@
             h("b", {}, String(c.completed)), h("span", {}, `done · ${c.timeouts + c.rejected} late/busy`))));
     }));
 
+    const mini = (label, values, max, fmt) => h("div", { class: "mini-chart" },
+      h("div", { class: "row tiny" }, h("span", { class: "muted" }, label), h("span", { class: "spacer" }), h("b", {}, fmt(values.at(-1) || 0))),
+      sparkline(values, max));
+    $("#stages").append(h("div", { class: "grid halves mini-charts" },
+      mini("Jobs waiting · last 3 min", history.queued, 4, v => String(v)),
+      mini("Server CPU · last 3 min", history.cpu, 100, v => Math.round(v) + "%")));
+
     const parts = [
       meter("CPU", sys.cpu_percent, `${Math.round(sys.cpu_percent)}% of ${sys.cpu_count} threads`, sys.cpu_percent > 90 ? "warn" : ""),
       meter("Memory", sys.memory.percent, `${sys.memory.used_gb} / ${sys.memory.total_gb} GB`),
