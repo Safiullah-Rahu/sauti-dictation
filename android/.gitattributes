@@ -1,0 +1,5 @@
+# gradlew must keep LF endings to run on Linux CI; the batch file keeps CRLF.
+gradlew        text eol=lf
+*.sh           text eol=lf
+*.bat          text eol=crlf
+*.jar          binary

@@ -1,0 +1,66 @@
+name: Android
+
+on:
+  push:
+    paths:
+      - "android/**"
+      - ".github/workflows/android.yml"
+  pull_request:
+    paths:
+      - "android/**"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test core, build debug APK, lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: android
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # Also validates gradle/wrapper/gradle-wrapper.jar against the official checksums.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # The runner image ships an Android SDK (ANDROID_HOME), so settings.gradle.kts includes :app.
+      - name: Unit tests, debug APK and lint
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon --stacktrace :core:test :app:assembleDebug :app:lintDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sauti-keyboard-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      - name: Upload test and lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sauti-android-reports
+          path: |
+            android/core/build/reports/tests/
+            android/core/build/test-results/
+            android/app/build/reports/
+          if-no-files-found: ignore

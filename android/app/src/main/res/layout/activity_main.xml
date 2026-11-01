@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_title"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/SetupBody"
+            android:text="@string/setup_intro" />
+
+        <!-- 1. Microphone -->
+        <LinearLayout style="@style/SetupCard">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/step_mic_title" />
+
+            <TextView
+                android:id="@+id/mic_status"
+                style="@style/SetupBody" />
+
+            <Button
+                android:id="@+id/mic_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/step_mic_button"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <!-- 2. Keyboard -->
+        <LinearLayout style="@style/SetupCard">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/step_kb_title" />
+
+            <TextView
+                android:id="@+id/kb_setup_status"
+                style="@style/SetupBody" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/kb_enable_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/step_kb_enable_button"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/kb_choose_button"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/step_kb_choose_button"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 3. Pairing -->
+        <LinearLayout style="@style/SetupCard">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/step_pair_title" />
+
+            <LinearLayout
+                android:id="@+id/pair_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/SetupBody"
+                    android:text="@string/step_pair_help" />
+
+                <EditText
+                    android:id="@+id/server_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:autofillHints="url"
+                    android:hint="@string/step_pair_server_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textUri"
+                    android:maxLines="1" />
+
+                <EditText
+                    android:id="@+id/pair_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/step_pair_code_hint"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:maxLines="1" />
+
+                <EditText
+                    android:id="@+id/device_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/step_pair_device_hint"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords"
+                    android:maxLines="1" />
+
+                <Button
+                    android:id="@+id/pair_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/step_pair_button"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/pair_status"
+                style="@style/SetupBody"
+                android:textIsSelectable="true" />
+
+            <LinearLayout
+                android:id="@+id/paired_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/test_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/step_pair_test"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/unpair_button"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/step_pair_unpair"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/test_status"
+                style="@style/SetupBody"
+                android:textIsSelectable="true" />
+        </LinearLayout>
+
+        <!-- 4. Defaults -->
+        <LinearLayout style="@style/SetupCard">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/step_defaults_title" />
+
+            <TextView
+                style="@style/SetupBody"
+                android:text="@string/step_defaults_help" />
+
+            <TextView
+                style="@style/SetupLabel"
+                android:labelFor="@+id/spinner_input_lang"
+                android:text="@string/label_input_lang" />
+
+            <Spinner
+                android:id="@+id/spinner_input_lang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/SetupLabel"
+                android:labelFor="@+id/spinner_mode"
+                android:text="@string/label_mode" />
+
+            <Spinner
+                android:id="@+id/spinner_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/SetupLabel"
+                android:labelFor="@+id/spinner_target_lang"
+                android:text="@string/label_target_lang" />
+
+            <Spinner
+                android:id="@+id/spinner_target_lang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/SetupLabel"
+                android:labelFor="@+id/spinner_style"
+                android:text="@string/label_style" />
+
+            <Spinner
+                android:id="@+id/spinner_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/save_defaults_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/defaults_save"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:id="@+id/defaults_status"
+                style="@style/SetupBody" />
+        </LinearLayout>
+
+        <!-- Privacy -->
+        <LinearLayout style="@style/SetupCard">
+
+            <TextView
+                style="@style/SetupCardTitle"
+                android:text="@string/privacy_title" />
+
+            <TextView
+                style="@style/SetupBody"
+                android:text="@string/privacy_text" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/version_text"
+            style="@style/SetupBody"
+            android:layout_marginTop="16dp"
+            android:gravity="center" />
+    </LinearLayout>
+</ScrollView>

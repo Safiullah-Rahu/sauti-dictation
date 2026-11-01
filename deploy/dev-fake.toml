@@ -1,0 +1,12 @@
+# Development without models: deterministic fake recogniser and cleanup.
+[server]
+host = "127.0.0.1"
+port = 8700
+data_dir = "../devdata"
+public_url = "http://127.0.0.1:8700"
+
+[asr]
+backend = "fake"
+
+[llm]
+backend = "fake"

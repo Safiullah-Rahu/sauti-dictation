@@ -1,0 +1,34 @@
+# Benchmark configuration on the development workstation (paths relative to the repo root).
+# Same model set and thread budget as deploy/sauti.toml for the 8-vCPU VM.
+[server]
+host = "127.0.0.1"
+port = 8700
+data_dir = "../devdata"
+public_url = "http://127.0.0.1:8700"
+
+[asr]
+backend = "faster_whisper"
+model = "../models/faster-whisper-large-v3-turbo"
+compute_type = "int8"
+workers = 2
+cpu_threads = 4
+beam_size = 1
+languages = ["en", "so", "ar", "sw"]
+partial_model = "../models/faster-whisper-small"
+partial_cpu_threads = 2
+
+[llm]
+backend = "openai_compat"
+base_url = "http://127.0.0.1:8081/v1"
+model = "qwen3-4b-instruct"
+max_concurrency = 2
+timeout_s = 30
+
+[translate]
+backend = "llm"
+
+[scheduler]
+final_timeout_s = 60
+
+[limits]
+daily_audio_minutes = 100000

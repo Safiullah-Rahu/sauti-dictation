@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="kb_padding">8dp</dimen>
+    <dimen name="kb_key_height">48dp</dimen>
+    <dimen name="kb_key_gap">6dp</dimen>
+    <dimen name="kb_key_radius">8dp</dimen>
+    <dimen name="kb_mic_size">76dp</dimen>
+    <dimen name="kb_pulse_size">104dp</dimen>
+    <dimen name="kb_mic_area_height">116dp</dimen>
+    <dimen name="kb_dot_size">10dp</dimen>
+    <dimen name="kb_chip_height">34dp</dimen>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_gap">12dp</dimen>
+</resources>

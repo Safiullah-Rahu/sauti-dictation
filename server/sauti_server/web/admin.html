@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sauti Admin</title>
+  <link rel="stylesheet" href="/static/common.css">
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+</head>
+<body>
+  <section id="login" class="login hidden">
+    <div class="card">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></span>Sauti administration</div>
+      <p class="muted small">Sign in with an administrator account.</p>
+      <form id="login-form">
+        <label>Username <input name="username" autocomplete="username" required></label>
+        <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn primary" type="submit">Sign in</button>
+        <p id="login-error" class="small" role="alert"></p>
+      </form>
+    </div>
+  </section>
+
+  <div id="shell" class="hidden">
+    <header class="top">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></span>Sauti admin</div>
+      <nav class="tabs" id="tabs">
+        <button data-tab="overview">Overview</button>
+        <button data-tab="users">Users</button>
+        <button data-tab="devices">Devices</button>
+        <button data-tab="sessions">Sessions</button>
+        <button data-tab="usage">Usage</button>
+        <button data-tab="dictionary">Org dictionary</button>
+        <button data-tab="events">Events</button>
+      </nav>
+      <span class="spacer"></span>
+      <span id="whoami" class="small muted"></span>
+      <a class="small" href="/app">My dictation</a>
+      <button class="btn small" id="logout">Sign out</button>
+    </header>
+    <main>
+      <p class="notice small">Transcripts and personal dictionaries are encrypted with each user's own key. This dashboard manages accounts and capacity; it cannot display what anyone dictated.</p>
+
+      <section id="tab-overview">
+        <div class="grid cols-4" id="stats"></div>
+        <div class="grid cols-2">
+          <div class="card"><h2>Queues</h2><div class="table-wrap"><table id="queues"></table></div>
+            <p class="small muted">Final text is always scheduled before live previews and long recordings; users take turns within each class.</p></div>
+          <div class="card"><h2>Server</h2><div id="system"></div></div>
+        </div>
+        <div class="card"><h2>Models</h2><div class="table-wrap"><table id="models"></table></div></div>
+      </section>
+
+      <section id="tab-users" class="hidden">
+        <div class="card">
+          <h2>Add a user</h2>
+          <form id="new-user" class="row">
+            <label>Username <input name="username" required pattern="[A-Za-z0-9._@-]+" minlength="2"></label>
+            <label>Display name <input name="display_name"></label>
+            <label>Initial password <input name="password" type="password" minlength="8" required></label>
+            <label>Role <select name="role"><option value="user">User</option><option value="admin">Administrator</option></select></label>
+            <label>Daily limit (min) <input name="daily_limit_minutes" type="number" min="1" placeholder="default"></label>
+            <button class="btn primary" type="submit">Create</button>
+          </form>
+        </div>
+        <div class="card"><h2>Accounts</h2><div class="table-wrap"><table id="users"></table></div>
+          <p class="small muted">Resetting a password starts the user with a new encryption key: their saved history and personal dictionary are deleted and every device is signed out. This is what keeps them unreadable to administrators.</p></div>
+      </section>
+
+      <section id="tab-devices" class="hidden">
+        <div class="card"><h2>Devices</h2><div class="table-wrap"><table id="devices"></table></div></div>
+      </section>
+
+      <section id="tab-sessions" class="hidden">
+        <div class="card"><h2>Live sessions</h2><div class="table-wrap"><table id="sessions"></table></div></div>
+      </section>
+
+      <section id="tab-usage" class="hidden">
+        <div class="card"><h2>Usage, last 14 days</h2><div class="table-wrap"><table id="usage"></table></div>
+          <p class="small muted">Counts and durations only. Times are UTC days.</p></div>
+      </section>
+
+      <section id="tab-dictionary" class="hidden">
+        <div class="card">
+          <h2>Organisation dictionary</h2>
+          <p class="small muted">Shared spellings for names, places and terms. They are offered to the recogniser as hints and are kept exactly by the cleanup step. Aliases are how the recogniser tends to mishear the term.</p>
+          <form id="new-term" class="row">
+            <label>Term <input name="term" required maxlength="80"></label>
+            <label>Sounds like (comma-separated) <input name="aliases" maxlength="300"></label>
+            <button class="btn primary" type="submit">Add</button>
+          </form>
+        </div>
+        <div class="card"><div class="table-wrap"><table id="terms"></table></div></div>
+      </section>
+
+      <section id="tab-events" class="hidden">
+        <div class="card"><h2>Failures and safety events</h2><div class="table-wrap"><table id="events"></table></div>
+          <p class="small muted">Error codes, the stage that failed and the account. No dictated content is recorded.</p></div>
+        <div class="card"><h2>Administrator audit log</h2><div class="table-wrap"><table id="audit"></table></div></div>
+      </section>
+    </main>
+  </div>
+  <script src="/static/common.js"></script>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

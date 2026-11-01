@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Sauti" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/sauti_primary</item>
+        <item name="colorPrimaryDark">@color/sauti_primary_dark</item>
+        <item name="colorAccent">@color/sauti_primary</item>
+        <item name="android:windowBackground">@color/screen_background</item>
+    </style>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sauti_primary">#3FBF8F</color>
+    <color name="sauti_primary_dark">#2E9E77</color>
+    <color name="sauti_on_primary">#0B1F17</color>
+
+    <color name="kb_background">#1C1F23</color>
+    <color name="kb_key">#2C3036</color>
+    <color name="kb_key_pressed">#3A3F46</color>
+    <color name="kb_key_text">#E8EAED</color>
+    <color name="kb_text_secondary">#A6AEB8</color>
+    <color name="kb_chip_stroke">#4A5058</color>
+    <color name="kb_chip_fill">#262A2F</color>
+    <color name="kb_mic">#2E9E77</color>
+    <color name="kb_mic_recording">#E5484D</color>
+    <color name="kb_mic_disabled">#5A616A</color>
+    <color name="kb_pulse">#66E5484D</color>
+    <color name="kb_ripple">#33FFFFFF</color>
+
+    <color name="dot_ready">#4CAF50</color>
+    <color name="dot_busy">#64B5F6</color>
+    <color name="dot_connecting">#FBC02D</color>
+    <color name="dot_offline">#EF5350</color>
+    <color name="dot_idle">#6B737C</color>
+
+    <color name="screen_background">#121417</color>
+    <color name="card_background">#1C1F23</color>
+    <color name="card_stroke">#2F343A</color>
+    <color name="text_primary">#E8EAED</color>
+    <color name="text_secondary">#A6AEB8</color>
+    <color name="text_ok">#66BB6A</color>
+    <color name="text_error">#F2B8B5</color>
+</resources>

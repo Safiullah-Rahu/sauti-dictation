@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  server-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install server (no model weights needed: tests use fake backends)
+        run: |
+          pip install -e "server[dev]" uvicorn websockets
+      - name: Server tests
+        run: pytest -q server/tests
+      - name: Desktop network-client tests (against a live server with fake models)
+        run: pytest -q desktop/tests/test_client.py
+
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: sauti-desktop-windows-x64
+          - os: macos-14
+            artifact: sauti-desktop-macos-arm64
+          - os: macos-13
+            artifact: sauti-desktop-macos-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build dependencies
+        run: |
+          pip install -r desktop/requirements.txt pyinstaller
+      - name: Import smoke test
+        working-directory: desktop
+        run: python -c "import sauti_desktop.app, sauti_desktop.client, sauti_desktop.insert, sauti_desktop.hotkeys; print('ok')"
+      - name: Build
+        run: pyinstaller --noconfirm desktop/sauti.spec
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path dist/Sauti/* -DestinationPath ${{ matrix.artifact }}.zip
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: ditto -c -k --keepParent dist/Sauti.app ${{ matrix.artifact }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.zip
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [server-tests, desktop]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          draft: true

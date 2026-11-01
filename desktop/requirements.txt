@@ -1,0 +1,6 @@
+PySide6-Essentials>=6.7
+pynput>=1.7.7
+sounddevice>=0.4.6
+keyring>=24
+websockets>=13
+numpy>=1.26

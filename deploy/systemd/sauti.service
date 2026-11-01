@@ -1,0 +1,27 @@
+[Unit]
+Description=Sauti dictation server
+After=network-online.target sauti-llm.service
+Wants=network-online.target
+
+[Service]
+User=sauti
+Group=sauti
+Environment=SAUTI_CONFIG=/etc/sauti/sauti.toml
+ExecStart=/opt/sauti/venv/bin/sauti-server run
+Restart=on-failure
+RestartSec=3
+# Interactive dictation should win over background jobs inside the VM.
+Nice=-5
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/sauti
+StateDirectory=sauti
+StateDirectoryMode=0700
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

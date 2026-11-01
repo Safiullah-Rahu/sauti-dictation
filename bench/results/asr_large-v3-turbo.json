@@ -1,0 +1,90 @@
+{
+  "model": "faster-whisper-large-v3-turbo",
+  "threads": 12,
+  "beam": 1,
+  "compute_type": "int8",
+  "n_per_lang": 30,
+  "pinning": "affinity=0-11,priority=high",
+  "langs": {
+    "en": {
+      "clips": 30,
+      "wer": 0.0457,
+      "cer": 0.0199,
+      "wer_auto": 0.0457,
+      "lid_accuracy": 1.0,
+      "audio_minutes": 5.25,
+      "rtf": 0.515
+    },
+    "so": {
+      "clips": 30,
+      "wer": 0.9529,
+      "cer": 0.3328,
+      "wer_auto": 1.1371,
+      "lid_accuracy": 0.0,
+      "audio_minutes": 6.71,
+      "rtf": 0.463
+    }
+  },
+  "samples": [
+    {
+      "lang": "en",
+      "ref": "The U.N. also hopes to finalize a fund to help countries affected by global warming to cope with the impacts.",
+      "hyp": "The UN also hopes to finalize a fund to help countries affected by global warming to cope with the impacts.",
+      "detected": "en"
+    },
+    {
+      "lang": "en",
+      "ref": "Soon, officers equipped with riot gear entered the yard and cornered the inmates with tear gas.",
+      "hyp": "Soon, officers Quip with riot gear entered the yard and cornered the inmates with tear gas.",
+      "detected": "en"
+    },
+    {
+      "lang": "en",
+      "ref": "This new environment has different resources and different competitors, so the new population will need different features or adaptations to be a strong competitor than what they had needed before.",
+      "hyp": "This new environment has different resources and different competitors, so the new population will need different features or adaptations to be a strong competitor than what they had needed before.",
+      "detected": "en"
+    },
+    {
+      "lang": "en",
+      "ref": "Argentina is well known for having one of the best polo teams and players in the world.",
+      "hyp": "Argentina is well known for having one of the best polo teams and players in the world.",
+      "detected": "en"
+    },
+    {
+      "lang": "en",
+      "ref": "When the fighting ceased after the wounded were transported to the hospital, about 40 of the other remaining inmates stayed in the yard and refused to return to their cells.",
+      "hyp": "When the fighting ceased after the wounded were transported to the hospital, about 40 of the other remaining inmates stayed in the yard and refused to return to their cells.",
+      "detected": "en"
+    },
+    {
+      "lang": "so",
+      "ref": "U.N. waxa ay rajeynayaan in ay soo gabagabeeyaan lacago lagu caawinayo dalalka ay kulaylka caalamka saameeyay si ay ula tacaalan dhibteeda.",
+      "hyp": "Yuhanka wa hai rijin yan inay suog d'wagdiwiyyan laa wallah wa awini yudhalal ka ayy kulal ka alam ka samayyi siya ula ta'alan dibatada.",
+      "detected": "en"
+    },
+    {
+      "lang": "so",
+      "ref": "Dhaqso, askarta ku diyaar garoobeen waxayna ku galeen beerta waxayna ku tureen maxaabiistii sunta dadka ka ilmeysiso.",
+      "hyp": "Daxo askartako dihar geroobin waehaeina ku galan berta waehaeina ku turaan mahaa bisti sunta daatakaayil maysisu.",
+      "detected": "ar"
+    },
+    {
+      "lang": "so",
+      "ref": "Deegaankani cusub wuxuu leeyahay ilo kala duwan iyo tartameyaal kala gedisan, sidaa awgeed tiradad cidda kunooli waxay u baahan doontaa muuqaalo kala duwan amma la qabsiyo si ay u noqdaan tartameyaal ka xoogan wixii ay hore ugu baahnaayeen.",
+      "hyp": "Digaan ken u'u subuxo leayahay ilo kaladuwan iyo tartamayaal kalad giedisan sida aogit tira da ida kunnuali weixay ubaahan doanta mooghalo kaladuwan ama laqab siyo siay unugdaan tartamayaal ka xoogan weixi ay horay ubaahanayayn.",
+      "detected": "ht"
+    },
+    {
+      "lang": "so",
+      "ref": "Argentina waxa lagu yaqaana in ay leedahay kooxda ugu wanaagsan ee fardaha iyo ciyaartoyda aduunka.",
+      "hyp": "Argentina, paaxa la guia ganaayna iledahay, koaxa uuanaaksanea fardahaay yayartuaydaa dunca.",
+      "detected": "es"
+    },
+    {
+      "lang": "so",
+      "ref": "Markii dagaalku istaagay kadibna dhaawaca loo qaaaday cisbitaalka, ku dhawaad 40 ka mida maxaabiistii hadhsanayd ayaa iska sii joogay beerta, waxaanay diideen inay ku laabtaan qolaalkoodii.",
+      "hyp": "Marki dagaalku istahayike dibna dawaa alo qada ezbutalka kulewaad afartan kamid da mahaabista kharsanait ayya iska si joowe berta wahaani didayninae kulabtaan kolalko odi.",
+      "detected": "ar"
+    }
+  ]
+}

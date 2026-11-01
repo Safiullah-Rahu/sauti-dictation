@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sauti-server"
+version = "0.1.0"
+description = "Self-hosted dictation backend: speech recognition, cleanup and translation on your own hardware."
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "websockets>=13",
+    "argon2-cffi>=23",
+    "cryptography>=42",
+    "httpx>=0.27",
+    "psutil>=5.9",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+asr = ["faster-whisper>=1.1"]
+mt = ["ctranslate2>=4.4", "sentencepiece>=0.2"]
+bench = ["jiwer>=3", "sacrebleu>=2.4", "soundfile>=0.12", "websockets>=13"]
+dev = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+sauti-server = "sauti_server.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["sauti_server*"]
+
+[tool.setuptools.package-data]
+sauti_server = ["web/*", "web/**/*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

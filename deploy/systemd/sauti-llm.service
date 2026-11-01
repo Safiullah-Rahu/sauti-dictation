@@ -1,0 +1,20 @@
+[Unit]
+Description=Sauti cleanup/translation model (llama.cpp server, localhost only)
+After=network.target
+
+[Service]
+User=sauti
+Group=sauti
+# Listens on 127.0.0.1 only: never expose the model server to the network.
+ExecStart=/opt/sauti/llama/llama-server -m /opt/sauti/models/gguf/Qwen3-4B-Instruct-2507-Q4_K_M.gguf \
+    --host 127.0.0.1 --port 8081 -c 8192 --parallel 2 -t 4 --no-webui
+Restart=on-failure
+RestartSec=3
+Nice=-5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

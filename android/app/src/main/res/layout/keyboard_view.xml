@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Compact voice keyboard: status, live preview, mode/language chips, mic, bottom row. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/kb_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/kb_background"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/kb_padding"
+    android:paddingTop="4dp"
+    android:paddingEnd="@dimen/kb_padding"
+    android:paddingBottom="@dimen/kb_padding">
+
+    <LinearLayout
+        android:id="@+id/kb_status_row"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/kb_status_dot"
+            android:layout_width="@dimen/kb_dot_size"
+            android:layout_height="@dimen/kb_dot_size"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/kb_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:accessibilityLiveRegion="polite"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/kb_key_text"
+            android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/kb_settings"
+            android:layout_width="40dp"
+            android:layout_height="34dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cd_settings"
+            android:scaleType="center"
+            android:src="@drawable/ic_settings" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/kb_partial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:minHeight="40dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textColor="@color/kb_text_secondary"
+        android:textSize="15sp"
+        android:textStyle="italic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/kb_chip_mode"
+            style="@style/KbChip" />
+
+        <TextView
+            android:id="@+id/kb_chip_lang"
+            style="@style/KbChip"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/kb_mic_area_height">
+
+        <View
+            android:id="@+id/kb_pulse"
+            android:layout_width="@dimen/kb_pulse_size"
+            android:layout_height="@dimen/kb_pulse_size"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_pulse"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/kb_mic"
+            android:layout_width="@dimen/kb_mic_size"
+            android:layout_height="@dimen/kb_mic_size"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_mic_idle"
+            android:contentDescription="@string/cd_mic_start"
+            android:elevation="3dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_mic" />
+
+        <Button
+            android:id="@+id/kb_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_setup_button"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/kb_key_height"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/kb_globe"
+            style="@style/KbKey"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/cd_globe"
+            android:src="@drawable/ic_globe" />
+
+        <TextView
+            android:id="@+id/kb_space"
+            style="@style/KbKey"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/kb_key_gap"
+            android:layout_weight="4"
+            android:contentDescription="@string/cd_space"
+            android:text="@string/kb_space"
+            android:textColor="@color/kb_text_secondary" />
+
+        <ImageButton
+            android:id="@+id/kb_backspace"
+            style="@style/KbKey"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/kb_key_gap"
+            android:layout_weight="1.4"
+            android:contentDescription="@string/cd_backspace"
+            android:src="@drawable/ic_backspace" />
+
+        <ImageButton
+            android:id="@+id/kb_enter"
+            style="@style/KbKey"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/kb_key_gap"
+            android:layout_weight="1.4"
+            android:contentDescription="@string/cd_enter"
+            android:src="@drawable/ic_enter" />
+    </LinearLayout>
+</LinearLayout>

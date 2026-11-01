@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Release builds: HTTPS only. Certificates are trusted if they chain to a system CA or to a
+    CA the user installed (Settings > Security > Encryption & credentials > Install a certificate),
+    which is how a self-hosted server with an internal CA is supported.
+    The debug build overrides this file (src/debug/res/xml) to also allow plain http for
+    development servers such as http://10.0.2.2:8700.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

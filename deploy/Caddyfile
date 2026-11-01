@@ -1,0 +1,26 @@
+# /etc/caddy/Caddyfile
+#
+# Local network: Caddy issues the certificate from its own internal CA. Copy the root
+# certificate from /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt to each
+# device (Windows: Trusted Root store; macOS: Keychain "Always Trust"; Android: Settings >
+# Security > Install certificate), or point the desktop app's "Custom CA" field at it.
+#
+# Public domain instead: replace the hostname and delete the "tls internal" line; Caddy then
+# obtains a free Let's Encrypt certificate automatically (ports 80/443 must be reachable).
+
+dictate.example.lan {
+	tls internal
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+	# WebSocket upgrades for /v1/dictate are proxied automatically.
+	reverse_proxy 127.0.0.1:8700 {
+		header_up X-Forwarded-For {remote_host}
+	}
+	log {
+		output file /var/log/caddy/sauti-access.log
+		# Request lines only. Tokens travel in headers or WebSocket frames, never in URLs.
+	}
+}

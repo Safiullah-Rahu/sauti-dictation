@@ -1,0 +1,59 @@
+# Sauti production configuration (/etc/sauti/sauti.toml).
+# Sized for a Proxmox VM with 8 vCPUs (CPU type "host") and 24 GB RAM on a Ryzen 5 9600X.
+# Every value can also be overridden with an environment variable SAUTI_<SECTION>__<KEY>.
+
+[server]
+host = "127.0.0.1"          # Caddy terminates TLS and proxies to this port
+port = 8700
+data_dir = "/var/lib/sauti"
+public_url = "https://dictate.example.lan"
+trust_proxy = true
+log_level = "info"
+
+[asr]
+backend = "faster_whisper"
+model = "/opt/sauti/models/faster-whisper-large-v3-turbo"
+compute_type = "int8"
+workers = 2                 # utterances transcribed in parallel
+cpu_threads = 4             # threads per transcription
+beam_size = 1
+vad = true
+languages = ["en", "so", "ar", "sw"]
+# Cheap model for the live preview while the user is still speaking.
+partial_model = "/opt/sauti/models/faster-whisper-small"
+partial_cpu_threads = 2
+# Route a language to a different model, e.g. a Somali-specific recogniser:
+# per_language = { so = "/opt/sauti/models/<somali-model>" }
+
+[llm]
+backend = "openai_compat"   # llama.cpp llama-server on the same VM (see sauti-llm.service)
+base_url = "http://127.0.0.1:8081/v1"
+model = "qwen3-4b-instruct"
+max_concurrency = 2         # match llama-server --parallel
+timeout_s = 20
+cleanup_languages = ["en", "so", "ar", "sw"]
+
+[translate]
+backend = "llm"             # or "ct2" with model_path = "/opt/sauti/models/madlad400-3b-mt-ct2-int8"
+# backend = "ct2"
+# model_path = "/opt/sauti/models/madlad400-3b-mt-ct2-int8"
+# cpu_threads = 4
+
+[scheduler]
+max_queued_finals = 32
+max_queued_per_user = 3
+final_timeout_s = 45
+partials = true
+partial_interval_s = 1.2
+interactive_max_s = 45      # longer recordings run as background work
+
+[limits]
+max_utterance_s = 120
+daily_audio_minutes = 240   # per user; administrators can override per account
+max_devices_per_user = 10
+
+[privacy]
+default_history = false     # transcript history is opt-in per user
+default_retention_days = 30
+max_retention_days = 365
+result_cache_s = 600        # unacknowledged results kept in memory only, then dropped

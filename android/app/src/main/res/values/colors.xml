@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="sauti_primary">#0B6E4F</color>
+    <color name="sauti_primary_dark">#084C37</color>
+    <color name="sauti_on_primary">#FFFFFF</color>
+    <color name="ic_launcher_background">#0B6E4F</color>
+
+    <!-- Keyboard -->
+    <color name="kb_background">#E9EDF1</color>
+    <color name="kb_key">#FFFFFF</color>
+    <color name="kb_key_pressed">#D5DBE2</color>
+    <color name="kb_key_text">#1F2328</color>
+    <color name="kb_text_secondary">#59626E</color>
+    <color name="kb_chip_stroke">#B9C1CB</color>
+    <color name="kb_chip_fill">#F6F8FA</color>
+    <color name="kb_mic">#0B6E4F</color>
+    <color name="kb_mic_recording">#C62828</color>
+    <color name="kb_mic_disabled">#9AA3AD</color>
+    <color name="kb_pulse">#66C62828</color>
+    <color name="kb_ripple">#33000000</color>
+
+    <!-- Status dot -->
+    <color name="dot_ready">#2E7D32</color>
+    <color name="dot_busy">#1565C0</color>
+    <color name="dot_connecting">#F9A825</color>
+    <color name="dot_offline">#C62828</color>
+    <color name="dot_idle">#9AA3AD</color>
+
+    <!-- Setup screen -->
+    <color name="screen_background">#F3F5F7</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_stroke">#DDE2E8</color>
+    <color name="text_primary">#1F2328</color>
+    <color name="text_secondary">#59626E</color>
+    <color name="text_ok">#2E7D32</color>
+    <color name="text_error">#B3261E</color>
+</resources>
