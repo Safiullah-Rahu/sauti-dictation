@@ -14,11 +14,12 @@ jobs:
   server-tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python: ["3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
       - name: Install server (tests use fake backends, no model downloads)
@@ -36,14 +37,14 @@ jobs:
         include:
           - os: windows-latest
             artifact: sauti-desktop-windows-x64
-          - os: macos-14
+          - os: macos-latest
             artifact: sauti-desktop-macos-arm64
-          - os: macos-13
+          - os: macos-15-intel
             artifact: sauti-desktop-macos-x64
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install build dependencies

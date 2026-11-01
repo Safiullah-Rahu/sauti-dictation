@@ -23,6 +23,24 @@
       "lid_accuracy": 0.0,
       "audio_minutes": 6.71,
       "rtf": 0.463
+    },
+    "ar": {
+      "clips": 30,
+      "wer": 0.1012,
+      "cer": 0.0415,
+      "wer_auto": 0.1012,
+      "lid_accuracy": 1.0,
+      "audio_minutes": 6.34,
+      "rtf": 0.483
+    },
+    "sw": {
+      "clips": 30,
+      "wer": 0.3528,
+      "cer": 0.1102,
+      "wer_auto": 0.3528,
+      "lid_accuracy": 1.0,
+      "audio_minutes": 7.59,
+      "rtf": 0.356
     }
   },
   "samples": [
@@ -85,6 +103,66 @@
       "ref": "Markii dagaalku istaagay kadibna dhaawaca loo qaaaday cisbitaalka, ku dhawaad 40 ka mida maxaabiistii hadhsanayd ayaa iska sii joogay beerta, waxaanay diideen inay ku laabtaan qolaalkoodii.",
       "hyp": "Marki dagaalku istahayike dibna dawaa alo qada ezbutalka kulewaad afartan kamid da mahaabista kharsanait ayya iska si joowe berta wahaani didayninae kulabtaan kolalko odi.",
       "detected": "ar"
+    },
+    {
+      "lang": "ar",
+      "ref": "وتأمل الأمم المتحدة أيضاً في وضع اللمسات الأخيرة على صندوق لمساعدة البلدان المتأثرة من ظاهرة الاحتباس الحراري للتعامل مع آثاره.",
+      "hyp": "وتأمل الأمم المتحدة أيضاً في وضع اللمسات الأخيرة على صندوق لمساعدة البلدان المتأثرة من ظاهرة الاحتباس الحراري للتعامل مع أثاره",
+      "detected": "ar"
+    },
+    {
+      "lang": "ar",
+      "ref": "سرعان ما دخل ضباط مجهزون بعدة الشغب الساحة وحاصروا النزلاء بالغاز المسيل للدموع.",
+      "hyp": "سرعان ما دخل ضباط المجهزون بعدة الشغب الساحة وحاصروا النزلاء بالغاز المسيل للدموع",
+      "detected": "ar"
+    },
+    {
+      "lang": "ar",
+      "ref": "نظراً لاحتواء هذه البيئة الجديدة على موارد ومنافسين مختلفين، ستحتاج المجموعة حديثة العهد إلى خواص مختلفة أو سبل تكيف لكي تصبح منافس أقوي مقارنة بما احتاجت من قوة سابقاً.",
+      "hyp": "نظراً لاحتواء هذه البيئة الجديدة على موارد ومنافسين مختلفين، ستحتاج المجموعة حديثة العهد إلى خواص مختلفة أو سبل تكيف لكي تصبح منافس أقوى مقارنة بما احتاجت من قوة سابقاً.",
+      "detected": "ar"
+    },
+    {
+      "lang": "ar",
+      "ref": "تشتهر الأرجنتين بوجود أحد أفضل فرق ولاعبي البولو في العالم.",
+      "hyp": "تشتهر الأرجنتين بوجود أحد أفضل فرق ولاعبي البولو في العالم",
+      "detected": "ar"
+    },
+    {
+      "lang": "ar",
+      "ref": "عندما توقف القتال بعد نقل الجرحى إلى المستشفى، بقي حوالي 40 من السجناء الباقين في الفناء ورفضوا العودة إلى زنازينهم.",
+      "hyp": "عندما توقف القتال بعد نقل الجرحة إلى المستشفى بقى حوالي أربعون من السجناء الباقين في الفناء ورفضوا العودة إلى زنازينهم",
+      "detected": "ar"
+    },
+    {
+      "lang": "sw",
+      "ref": "Umoja wa Mataifa pia una matumaini ya kumaliza ufadhili wa kusaidia mataifa yaliyoathirika kutokana na ongezeko la joto duniani ili kuweza kupambana na athari.",
+      "hyp": "Umoja wa mataifa pia unamatumaini ya kumaleza ufadhini wa kusaidia mataifa ya liwazirika kutokana na ongeweko na joto duniani ilikuweza kupambana na athari.",
+      "detected": "sw"
+    },
+    {
+      "lang": "sw",
+      "ref": "Karibuni, maafisa walio na vyombo vya ghasia waliingia kwenye yadi na kuwazingira wafungwa kwa vitoa machozi.",
+      "hyp": "Karibu ni maafisa walio na viombo vagasia walingia kwenye adi na kuwazingira wafungwa kwa vitroa machozi.",
+      "detected": "sw"
+    },
+    {
+      "lang": "sw",
+      "ref": "Mazingira haya mapya yana rasilimali tofauti na washindani tofauti, kwa hivyo idadi mpya ya watu itahitaji vipengele au mazoea tofauti ili kuwa washindani imara kuliko walichohitaji awali.",
+      "hyp": "Mazingira haya mapia ya narasinali tofauti na washindani tofauti. Kwa hivyo idadi mpia ya watu itaitaji vipengeli au mazwewe tofauti ilikuwa washindani imara kuliko walichoitaji awali.",
+      "detected": "sw"
+    },
+    {
+      "lang": "sw",
+      "ref": "Ajentina inajulikana vizuri kwa kuwa na mojawapo ya timu na wachezaji bora wa polo ulimweguni.",
+      "hyp": "Argentina inajulikana vizuri kwa kuwa na moja wapo ya watimu ya wachazaji bora wa polo ulimuenguni.",
+      "detected": "sw"
+    },
+    {
+      "lang": "sw",
+      "ref": "Wakati mapigano yalipokoma na majeruhi kupelekwa hospitalini, takriban 40 wa wafungwa waliobaki walikaa kwenye yadi na kukataa kurudi kwenye seli zao.",
+      "hyp": "Wakati mapigano ya lipokuma na majerui kupeleko hospitalini takriban arubaini wa wafungo, lio baki walikaa kwenye yadi na kukata kurudi kwenye seli zao.",
+      "detected": "sw"
     }
   ]
 }

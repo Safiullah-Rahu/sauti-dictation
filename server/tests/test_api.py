@@ -104,7 +104,7 @@ def test_admin_reset_clears_encrypted_data_and_devices(client):
 
 
 def test_admin_api_exposes_no_transcript_routes(client):
-    paths = [r.path for r in client.app.routes]
+    paths = list(client.app.openapi()["paths"])
     admin_paths = [p for p in paths if p.startswith("/v1/admin")]
     assert admin_paths and not any("history" in p or "transcript" in p for p in admin_paths)
 

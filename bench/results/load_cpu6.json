@@ -1,0 +1,176 @@
+{
+  "label": "Whisper large-v3-turbo + Qwen3-4B, CPU only, 12 logical CPUs (6 P-cores), high priority, heavy background load",
+  "server_models": {
+    "asr": {
+      "backend": "faster_whisper",
+      "model": "../models/faster-whisper-large-v3-turbo",
+      "compute_type": "int8",
+      "partial_model": "../models/faster-whisper-small",
+      "per_language": {},
+      "workers": 2,
+      "cpu_threads": 4,
+      "device": "cpu"
+    },
+    "llm": {
+      "backend": "openai_compat",
+      "base_url": "http://127.0.0.1:8081/v1",
+      "model": "qwen3-4b-instruct",
+      "max_concurrency": 2
+    },
+    "translate": "llm",
+    "llm_healthy": true
+  },
+  "machine": {
+    "cpu": "measured host",
+    "logical_cpus": 32,
+    "pinned": "0-11"
+  },
+  "levels": [
+    {
+      "users": 1,
+      "duration_s": 150.0,
+      "utterances": 5,
+      "completed": 5,
+      "errors": {},
+      "speech_s_mean": 8.7,
+      "final_latency_ms": {
+        "p50": 21375,
+        "p95": 31219,
+        "max": 31219
+      },
+      "time_to_first_text_ms": {
+        "p50": 5469,
+        "p95": 5562,
+        "share_with_preview": 0.6
+      },
+      "server_queue_ms": {
+        "p50": 0,
+        "p95": 0
+      },
+      "server_asr_ms": {
+        "p50": 16171,
+        "p95": 19030
+      },
+      "server_cleanup_ms": {
+        "p50": 4936,
+        "p95": 12171
+      },
+      "cleanup_fallbacks": 0,
+      "lid_accuracy": 0.8,
+      "wer_by_lang": {
+        "en": 0.121,
+        "so": 1.0,
+        "ar": 0.133,
+        "sw": 0.368
+      },
+      "resources": {
+        "machine_cpu_pct": 78.8,
+        "pinned_cores_cpu_pct": 81.1,
+        "other_cores_cpu_pct": 77.4,
+        "server_busy_cpus": 2.1,
+        "llm_busy_cpus": 0.8,
+        "server_rss_mb_max": 1721,
+        "llm_rss_mb_max": 5347
+      }
+    }
+  ],
+  "raw": {
+    "1": [
+      {
+        "user": 0,
+        "lang": "en",
+        "speech_s": 7.96,
+        "sid": "1570",
+        "final_latency_ms": 31219,
+        "ttft_ms": null,
+        "server": {
+          "queue": 0,
+          "asr": 19030,
+          "cleanup": 12171,
+          "translate": 0,
+          "total": 31202
+        },
+        "detected": "en",
+        "notices": [],
+        "wer_e": 0,
+        "wer_n": 13
+      },
+      {
+        "user": 0,
+        "lang": "so",
+        "speech_s": 6.72,
+        "sid": "1571",
+        "final_latency_ms": 21109,
+        "ttft_ms": null,
+        "server": {
+          "queue": 0,
+          "asr": 16171,
+          "cleanup": 4936,
+          "translate": 0,
+          "total": 21108
+        },
+        "detected": "ar",
+        "notices": [],
+        "wer_e": 15,
+        "wer_n": 15
+      },
+      {
+        "user": 0,
+        "lang": "ar",
+        "speech_s": 7.02,
+        "sid": "1571",
+        "final_latency_ms": 14375,
+        "ttft_ms": 5469,
+        "server": {
+          "queue": 0,
+          "asr": 11469,
+          "cleanup": 2905,
+          "translate": 0,
+          "total": 14375
+        },
+        "detected": "ar",
+        "notices": [],
+        "wer_e": 2,
+        "wer_n": 15
+      },
+      {
+        "user": 0,
+        "lang": "sw",
+        "speech_s": 10.08,
+        "sid": "1576",
+        "final_latency_ms": 22375,
+        "ttft_ms": 4219,
+        "server": {
+          "queue": 0,
+          "asr": 12140,
+          "cleanup": 10234,
+          "translate": 0,
+          "total": 22375
+        },
+        "detected": "sw",
+        "notices": [],
+        "wer_e": 7,
+        "wer_n": 19
+      },
+      {
+        "user": 0,
+        "lang": "en",
+        "speech_s": 11.58,
+        "sid": "1571",
+        "final_latency_ms": 21375,
+        "ttft_ms": 5562,
+        "server": {
+          "queue": 0,
+          "asr": 17235,
+          "cleanup": 4139,
+          "translate": 0,
+          "total": 21375
+        },
+        "detected": "en",
+        "notices": [],
+        "wer_e": 4,
+        "wer_n": 20
+      }
+    ]
+  }
+}
