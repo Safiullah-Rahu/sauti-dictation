@@ -38,6 +38,49 @@ NOTICES = {
 }
 
 
+STYLE = """
+QDialog { background: #ffffff; }
+QDialog QLabel { color: #15201f; }
+QLabel#h1 { font-size: 15pt; font-weight: 650; }
+QLabel#sub { color: #66736f; }
+QLabel#err { color: #b3261e; }
+QLineEdit, QComboBox { border: 1px solid #d3d8d0; border-radius: 8px; padding: 6px 9px; background: #ffffff;
+                       color: #15201f; selection-background-color: #0f6e5c; min-height: 20px; }
+QLineEdit:focus, QComboBox:focus { border: 1px solid #0f6e5c; }
+QPushButton { border: 1px solid #d3d8d0; border-radius: 8px; padding: 7px 16px; background: #ffffff; color: #15201f; font-weight: 600; }
+QPushButton:hover { background: #eceee9; }
+QPushButton:default { background: #0f6e5c; color: #ffffff; border-color: #0f6e5c; }
+QPushButton:default:hover { background: #13866f; }
+QCheckBox { color: #15201f; spacing: 8px; }
+QMenu { background: #1b2322; color: #e9eeec; border: 1px solid #2c3634; border-radius: 10px; padding: 6px; }
+QMenu::item { padding: 6px 22px 6px 14px; border-radius: 6px; }
+QMenu::item:selected { background: #24413a; }
+QMenu::item:disabled { color: #8f9c98; }
+QMenu::separator { height: 1px; background: #2c3634; margin: 5px 8px; }
+QMenu::indicator { width: 14px; height: 14px; left: 4px; }
+"""
+
+
+def dialog_header(title: str, subtitle: str) -> QWidget:
+    w = QWidget()
+    row = QHBoxLayout(w)
+    row.setContentsMargins(0, 0, 0, 8)
+    logo = QLabel()
+    logo.setPixmap(make_icon("#0f6e5c").pixmap(40, 40))
+    text = QVBoxLayout()
+    h1 = QLabel(title)
+    h1.setObjectName("h1")
+    sub = QLabel(subtitle)
+    sub.setObjectName("sub")
+    sub.setWordWrap(True)
+    text.addWidget(h1)
+    text.addWidget(sub)
+    row.addWidget(logo)
+    row.addSpacing(10)
+    row.addLayout(text, 1)
+    return w
+
+
 def make_icon(color: str, ring: bool = False) -> QIcon:
     pm = QPixmap(64, 64)
     pm.fill(Qt.transparent)
@@ -114,13 +157,15 @@ class SignInDialog(QDialog):
         form.addRow("Custom CA", self.ca)
         self.err = QLabel("")
         self.err.setWordWrap(True)
-        self.err.setStyleSheet("color:#c0392b")
+        self.err.setObjectName("err")
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.button(QDialogButtonBox.Ok).setText("Sign in")
+        buttons.button(QDialogButtonBox.Ok).setDefault(True)
         buttons.accepted.connect(self._submit)
         buttons.rejected.connect(self.reject)
         lay = QVBoxLayout(self)
-        lay.addWidget(QLabel("Audio is processed only on your organisation's server."))
+        lay.setContentsMargins(24, 22, 24, 20)
+        lay.addWidget(dialog_header("Sign in to Sauti", "Your voice is processed only on your organisation's own server."))
         lay.addLayout(form)
         lay.addWidget(self.err)
         lay.addWidget(buttons)
@@ -180,13 +225,15 @@ class SettingsDialog(QDialog):
         self.style.setCurrentIndex(max(0, self.style.findData(app.profile_settings.get("style", "neutral"))))
         form.addRow("Writing style (synced)", self.style)
         self.err = QLabel("")
-        self.err.setStyleSheet("color:#c0392b")
+        self.err.setObjectName("err")
         buttons = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        buttons.button(QDialogButtonBox.Save).setDefault(True)
         buttons.accepted.connect(self._save)
         buttons.rejected.connect(self.reject)
         lay = QVBoxLayout(self)
+        lay.setContentsMargins(24, 22, 24, 20)
+        lay.addWidget(dialog_header("Sauti settings", f"Signed in as {s.username} on {s.server_url}"))
         lay.addLayout(form)
-        lay.addWidget(QLabel(f"Signed in as {s.username} on {s.server_url}"))
         lay.addWidget(self.err)
         lay.addWidget(buttons)
         self.resize(480, 0)
@@ -359,6 +406,10 @@ class SautiApp(QObject):
             for act in grp.actions():
                 act.setChecked(act.data() == self.profile_settings.get(key))
         self.target_menu.setEnabled(self.profile_settings.get("mode") == "translate")
+        mode = self.profile_settings.get("mode", "clean")
+        lang = self.profile_settings.get("input_lang", "auto")
+        self.overlay.chip = (f"Translate → {self.profile_settings.get('output_lang', 'en').upper()}" if mode == "translate"
+                             else f"{MODES.get(mode, mode).split()[0]} · {'Auto' if lang == 'auto' else lang.upper()}")
         self._update_hint()
 
     def update_profile(self, **values) -> None:
@@ -539,6 +590,7 @@ def main(argv: list[str] | None = None) -> None:
     QApplication.setQuitOnLastWindowClosed(False)
     qt = QApplication(sys.argv[:1])
     qt.setApplicationName("Sauti")
+    qt.setStyleSheet(STYLE)
     if not QSystemTrayIcon.isSystemTrayAvailable():
         QMessageBox.critical(None, "Sauti", "No system tray / menu bar is available.")
         sys.exit(1)

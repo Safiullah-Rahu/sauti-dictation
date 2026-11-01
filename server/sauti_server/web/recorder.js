@@ -2,8 +2,8 @@
 "use strict";
 
 class SautiRecorder {
-  constructor({ onState, onPartial, onFinal, onError }) {
-    Object.assign(this, { onState, onPartial, onFinal, onError });
+  constructor({ onState, onPartial, onFinal, onError, onLevel }) {
+    Object.assign(this, { onState, onPartial, onFinal, onError, onLevel: onLevel || (() => {}) });
     this.ws = null;
     this.ready = null;
     this.stream = null;
@@ -48,7 +48,10 @@ class SautiRecorder {
     this.node = new AudioWorkletNode(this.ctx, "pcm-downsampler");
     this.current = crypto.randomUUID();
     ws.send(JSON.stringify({ type: "start", utterance_id: this.current, ...opts, sample_rate: 16000, format: "pcm_s16le" }));
-    this.node.port.onmessage = ev => { if (this.ws && this.current) this.ws.send(ev.data.pcm); };
+    this.node.port.onmessage = ev => {
+      if (this.ws && this.current) this.ws.send(ev.data.pcm);
+      this.onLevel(ev.data.level || 0);
+    };
     src.connect(this.node);
     this.onState("recording");
   }
@@ -61,6 +64,7 @@ class SautiRecorder {
     this.stream && this.stream.getTracks().forEach(t => t.stop()); // releases the microphone indicator
     this.ctx && (await this.ctx.close());
     this.ws && this.ws.send(JSON.stringify({ type: "end", utterance_id: id }));
+    this.onLevel(0);
     this.onState("processing");
   }
 }

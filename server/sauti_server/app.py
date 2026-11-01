@@ -133,6 +133,9 @@ def create_app(cfg: Config | None = None, backends: Backends | None = None) -> F
                 "script-src 'self'; frame-ancestors 'none'")
         if request.url.path.startswith("/v1/"):
             response.headers.setdefault("Cache-Control", "no-store")
+        elif request.url.path in ("/app", "/admin") or request.url.path.startswith("/static/"):
+            # Revalidate on every load so an update is picked up immediately (ETag keeps it cheap).
+            response.headers.setdefault("Cache-Control", "no-cache")
         return response
 
     @app.websocket("/v1/dictate")

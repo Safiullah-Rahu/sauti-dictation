@@ -8,120 +8,148 @@
   <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
 </head>
 <body>
-  <section id="login" class="login hidden">
-    <div class="card">
-      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></span>Sauti</div>
-      <p class="muted small">Private dictation on your organisation's own server.</p>
+  <section id="login" class="auth hidden">
+    <div class="auth-hero">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></span><span>Sauti<small>Private dictation</small></span></div>
+      <div>
+        <h1>Speak. Your words appear where you're typing.</h1>
+        <p>Speech recognition, cleanup and translation run on your organisation's own server. Nothing is sent to an outside AI service.</p>
+        <div class="points">
+          <div data-icon="mic">Hold a key on Windows or macOS, or use the Android keyboard</div>
+          <div data-icon="globe">English, Somali, Arabic and Swahili — with translation</div>
+          <div data-icon="lock">Your dictionary and history are encrypted with your own key</div>
+        </div>
+      </div>
+      <svg class="wave" viewBox="0 0 420 120" aria-hidden="true"><rect x="0" y="50" width="10" height="20" rx="5"/><rect x="20" y="35" width="10" height="50" rx="5"/><rect x="40" y="15" width="10" height="90" rx="5"/><rect x="60" y="40" width="10" height="40" rx="5"/><rect x="80" y="25" width="10" height="70" rx="5"/><rect x="100" y="5" width="10" height="110" rx="5"/><rect x="120" y="30" width="10" height="60" rx="5"/><rect x="140" y="45" width="10" height="30" rx="5"/><rect x="160" y="20" width="10" height="80" rx="5"/><rect x="180" y="38" width="10" height="44" rx="5"/><rect x="200" y="10" width="10" height="100" rx="5"/><rect x="220" y="32" width="10" height="56" rx="5"/><rect x="240" y="48" width="10" height="24" rx="5"/><rect x="260" y="22" width="10" height="76" rx="5"/><rect x="280" y="42" width="10" height="36" rx="5"/><rect x="300" y="28" width="10" height="64" rx="5"/><rect x="320" y="50" width="10" height="20" rx="5"/></svg>
+      <p class="tiny">Audio is never stored.</p>
+    </div>
+    <div class="auth-form">
       <form id="login-form">
-        <label>Username <input name="username" autocomplete="username" required></label>
-        <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+        <div><h2>Welcome back</h2><p class="muted small">Sign in with the account your administrator created.</p></div>
+        <label class="field">Username <input name="username" autocomplete="username" required></label>
+        <label class="field">Password <input name="password" type="password" autocomplete="current-password" required></label>
         <button class="btn primary" type="submit">Sign in</button>
         <p id="login-error" class="small" role="alert"></p>
       </form>
     </div>
   </section>
 
-  <div id="shell" class="hidden">
-    <header class="top">
-      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></span>Sauti</div>
+  <div id="shell" class="shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></span><span>Sauti<small>Private dictation</small></span></div>
       <nav class="tabs" id="tabs">
-        <button data-tab="dictate">Try dictation</button>
-        <button data-tab="settings">Settings</button>
-        <button data-tab="dictionary">Dictionary</button>
-        <button data-tab="history">History</button>
-        <button data-tab="devices">Devices</button>
+        <button data-tab="dictate" data-icon="mic" data-title="Try dictation" data-sub="Check languages and settings from the browser. For everyday use, the desktop app and Android keyboard type straight into any app.">Dictate</button>
+        <button data-tab="settings" data-icon="settings" data-sub="These follow you to every device you sign in on">Settings</button>
+        <button data-tab="dictionary" data-icon="book" data-sub="Names and terms Sauti should always spell your way">Dictionary</button>
+        <button data-tab="history" data-icon="history" data-sub="Stored only if you turn it on — encrypted with your own key">History</button>
+        <button data-tab="devices" data-icon="laptop" data-sub="Your computers and phones, and phone pairing">Devices</button>
       </nav>
-      <span class="spacer"></span>
-      <span id="whoami" class="small muted"></span>
-      <a id="admin-link" class="small hidden" href="/admin">Admin</a>
-      <button class="btn small" id="logout">Sign out</button>
-    </header>
-    <main>
-      <section id="tab-dictate">
-        <div class="card">
-          <h2>Try dictation in the browser</h2>
-          <p class="small muted">For everyday use, install the desktop app or the Android keyboard: they type straight into any application. This page is for checking languages and settings.</p>
-          <div class="row">
-            <label>Mode <select id="d-mode"></select></label>
-            <label>Spoken language <select id="d-lang"></select></label>
-            <label id="d-target-wrap">Translate into <select id="d-target"></select></label>
+      <div class="sidebar-foot">
+        <a class="btn ghost hidden" id="admin-link" href="/admin" data-icon="shield">Administration</a>
+        <button class="btn ghost" data-theme-toggle></button>
+        <div class="me"><span class="avatar" id="me-avatar"></span><span class="who"><b id="whoami"></b><span id="me-sub">Signed in</span></span><span class="spacer"></span>
+          <button class="btn ghost icon-only" id="logout" aria-label="Sign out" data-icon="logout"></button></div>
+      </div>
+    </aside>
+
+    <div class="content">
+      <header class="topbar">
+        <button class="btn ghost icon-only menu-btn" data-menu-toggle aria-label="Menu" data-icon="menu"></button>
+        <div class="title"><h1 id="page-title">Dictate</h1><p id="page-sub"></p></div>
+      </header>
+      <main>
+        <section id="tab-dictate">
+          <div class="dictate">
+            <div class="card">
+              <div class="stack">
+                <div class="seg" id="d-mode" role="group" aria-label="Mode"></div>
+                <div class="row">
+                  <label class="field">Spoken language <select id="d-lang"></select></label>
+                  <label class="field" id="d-target-wrap">Translate into <select id="d-target"></select></label>
+                </div>
+              </div>
+              <div class="mic-stage">
+                <div class="mic-ring" id="mic-ring"><button class="mic" id="mic" aria-label="Start dictation"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button></div>
+                <div class="state-line" id="d-status" role="status">Tap the microphone and speak</div>
+                <span class="timer" id="d-timer"></span>
+                <p class="muted small">Tap again to finish. The microphone is only open while the button is red.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Results</h2><span class="spacer"></span><button class="btn sm ghost" id="d-clear" data-icon="trash">Clear</button></div>
+              <div class="results" id="d-out"><div class="empty" id="d-empty"><svg class="icon" viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg><div>Your dictations appear here.</div></div></div>
+            </div>
           </div>
-          <button class="mic" id="mic" aria-label="Start dictation"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button>
-          <p id="d-status" class="small muted" role="status">Press the microphone, speak, press again to finish.</p>
-          <div class="transcript" id="d-out" dir="auto"></div>
-          <div class="row">
-            <button class="btn small" id="d-copy">Copy text</button>
-            <button class="btn small" id="d-clear">Clear</button>
-            <span id="d-timing" class="small muted"></span>
+        </section>
+
+        <section id="tab-settings" class="hidden">
+          <div class="grid halves">
+            <div class="card stack">
+              <div class="card-head"><span class="tile-icon accent" data-icon="mic"></span><h2>Dictation defaults</h2></div>
+              <label class="field">Mode <span class="seg" id="s-mode" role="group" aria-label="Default mode"></span></label>
+              <label class="field">Spoken language <select id="s-input"></select></label>
+              <label class="field">Translate into <select id="s-output"></select></label>
+              <label class="field">Writing style <span class="seg" id="s-style" role="group" aria-label="Writing style"></span></label>
+            </div>
+            <div class="card stack">
+              <div class="card-head"><span class="tile-icon accent" data-icon="history"></span><h2>Transcript history</h2></div>
+              <p class="muted small">Off by default. When on, your dictations are stored encrypted with your own key for the period you choose, and only you can read them. Turning history off deletes everything already saved. Audio is never stored.</p>
+              <label class="switch"><input type="checkbox" id="s-history"><span class="track"></span><span>Keep my history</span></label>
+              <label class="field">Keep for (days) <input type="number" id="s-retention" min="1" max="365"></label>
+              <div><button class="btn" id="s-history-save">Save history settings</button></div>
+            </div>
+            <div class="card stack">
+              <div class="card-head"><span class="tile-icon accent" data-icon="key"></span><h2>Password</h2></div>
+              <form id="password" class="stack">
+                <label class="field">Current password <input type="password" name="current_password" autocomplete="current-password" required></label>
+                <label class="field">New password (8+ characters) <input type="password" name="new_password" minlength="8" autocomplete="new-password" required></label>
+                <div><button class="btn" type="submit">Change password</button></div>
+              </form>
+            </div>
+            <div class="card stack">
+              <div class="card-head"><span class="tile-icon accent" data-icon="chart"></span><h2>Today</h2></div>
+              <div id="s-usage"></div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="tab-settings" class="hidden">
-        <div class="card">
-          <h2>Dictation defaults</h2>
-          <p class="small muted">These follow you to every device you sign in on.</p>
-          <form id="settings" class="grid cols-2">
-            <label>Mode <select name="mode"></select></label>
-            <label>Spoken language <select name="input_lang"></select></label>
-            <label>Translate into <select name="output_lang"></select></label>
-            <label>Writing style <select name="style"></select></label>
-          </form>
-        </div>
-        <div class="card">
-          <h2>Transcript history</h2>
-          <p class="small muted">Off by default. When on, your dictations are stored encrypted with your own key for the period you choose, and only you can read them. Turning history off deletes everything already saved. Audio is never stored.</p>
-          <form id="history-settings" class="row">
-            <label class="row"><input type="checkbox" name="history_enabled"> Keep my history</label>
-            <label>Keep for (days) <input type="number" name="retention_days" min="1" max="365"></label>
-            <button class="btn" type="submit">Save</button>
-          </form>
-        </div>
-        <div class="card">
-          <h2>Password</h2>
-          <form id="password" class="row">
-            <label>Current <input type="password" name="current_password" autocomplete="current-password" required></label>
-            <label>New (8+ characters) <input type="password" name="new_password" minlength="8" autocomplete="new-password" required></label>
-            <button class="btn" type="submit">Change password</button>
-          </form>
-        </div>
-      </section>
-
-      <section id="tab-dictionary" class="hidden">
-        <div class="card">
-          <h2>My dictionary</h2>
-          <p class="small muted">Names and terms you use often. "Sounds like" lists how they tend to be misheard, so they can be corrected automatically. Your dictionary is encrypted and private to you.</p>
-          <form id="new-term" class="row">
-            <label>Term <input name="term" required maxlength="80"></label>
-            <label>Sounds like (comma-separated) <input name="aliases" maxlength="300"></label>
-            <button class="btn primary" type="submit">Add</button>
-          </form>
-          <div class="table-wrap"><table id="terms"></table></div>
-        </div>
-        <div class="card"><h3>Shared by your organisation</h3><div class="table-wrap"><table id="org-terms"></table></div></div>
-      </section>
-
-      <section id="tab-history" class="hidden">
-        <div class="card">
-          <div class="row"><h2>History</h2><span class="spacer"></span><button class="btn small danger" id="clear-history">Delete all</button></div>
-          <p id="history-off" class="notice hidden">History is off, so nothing is stored. You can turn it on under Settings.</p>
-          <div class="table-wrap"><table id="history"></table></div>
-        </div>
-      </section>
-
-      <section id="tab-devices" class="hidden">
-        <div class="card">
-          <h2>Pair a phone</h2>
-          <p class="small muted">Open the Sauti keyboard app on the phone, enter this server address and the code. The code works once and expires after 10 minutes.</p>
-          <button class="btn primary" id="pair">Create pairing code</button>
-          <div id="pair-out" class="hidden">
-            <p class="code" id="pair-code"></p>
-            <p class="small">Server: <strong id="pair-server"></strong> · <span id="pair-expiry" class="muted"></span></p>
+        <section id="tab-dictionary" class="hidden">
+          <div class="card">
+            <form id="new-term" class="row">
+              <label class="field">Term <input name="term" required maxlength="80" placeholder="e.g. Hargeisa"></label>
+              <label class="field">Sounds like <input name="aliases" maxlength="300" placeholder="how it gets misheard, comma-separated"></label>
+              <button class="btn primary" type="submit" data-icon="plus">Add</button>
+            </form>
           </div>
-        </div>
-        <div class="card"><h2>My devices</h2><div class="table-wrap"><table id="devices"></table></div></div>
-      </section>
-    </main>
+          <div class="card"><div class="card-head"><h2>My terms</h2><span class="sub">encrypted, private to you</span></div><div class="chips" id="terms"></div></div>
+          <div class="card"><div class="card-head"><h2>Shared by your organisation</h2></div><div class="chips" id="org-terms"></div></div>
+        </section>
+
+        <section id="tab-history" class="hidden">
+          <div class="notice hidden" id="history-off"><span data-icon="lock"></span><span>History is off, so nothing is stored. You can turn it on under Settings.</span></div>
+          <div class="card">
+            <div class="card-head"><h2>Recent dictations</h2><span class="spacer"></span><button class="btn sm danger" id="clear-history" data-icon="trash">Delete all</button></div>
+            <div class="list" id="history"></div>
+          </div>
+        </section>
+
+        <section id="tab-devices" class="hidden">
+          <div class="grid two">
+            <div class="card"><div class="card-head"><h2>My devices</h2></div><div class="list" id="devices"></div></div>
+            <div class="card stack">
+              <div class="card-head"><span class="tile-icon accent" data-icon="phone"></span><h2>Pair a phone</h2></div>
+              <p class="muted small">Open the Sauti keyboard app, enter the server address and this code. The code works once and expires after 10 minutes.</p>
+              <div><button class="btn primary" id="pair" data-icon="link">Create pairing code</button></div>
+              <div id="pair-out" class="hidden stack">
+                <div class="row"><span class="code" id="pair-code"></span><span class="spacer"></span><svg class="countdown" viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="23"/><circle class="prog" id="pair-ring" cx="28" cy="28" r="23"/></svg></div>
+                <div class="row small"><span class="muted">Server</span><b id="pair-server"></b><button class="btn sm ghost" id="pair-copy" data-icon="copy">Copy</button></div>
+                <span id="pair-expiry" class="muted small"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
   <script src="/static/common.js"></script>
   <script src="/static/recorder.js"></script>
