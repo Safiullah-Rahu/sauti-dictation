@@ -185,7 +185,7 @@ all queued work for it.
 |---|---|---|
 | `partial` | `utterance_id`, `text`, `seq` | Live preview while the user is still speaking. **Never insert it.** May stop arriving under load. |
 | `status` | `utterance_id`, `state` (`queued`/`transcribing`/`cleaning`/`translating`), `position` (when queued) | Progress for the UI. |
-| `final` | `utterance_id`, `text`, `raw`, `lang`, `lang_prob`, `mode`, `target_lang`, `replayed`, `timings_ms`, `notices` | The text to insert. `text` may be `""` (no speech) — insert nothing. |
+| `final` | `utterance_id`, `text`, `raw`, `lang`, `lang_prob`, `confidence`, `mode`, `target_lang`, `replayed`, `timings_ms`, `notices`, `source_text` (translate mode) | The text to insert. `text` may be `""` (no speech) — insert nothing. `confidence` (0–1) is the recogniser's confidence in the words. |
 | `error` | `utterance_id` (optional), `code`, `message`, `retryable`, `retry_after_ms` | See codes below. |
 | `resume_result` | `utterance_id`, `state` (`processing`/`unknown`) | Answer to `resume`. |
 | `profile_changed` | `version` | Re-fetch `GET /v1/me/profile`. |
@@ -198,7 +198,10 @@ measured on the server from the `end` message to the `final` message.
 `no_speech`, `cleanup_fallback` (LLM output failed the meaning-preservation check, so the
 rule-based cleanup was used), `cleanup_unavailable`, `translation_unverified`,
 `truncated` (audio exceeded the length limit), `lang_restricted` (detected language was
-outside the allowed set and the best allowed language was used).
+outside the allowed set and the best allowed language was used), `low_confidence` (the
+recogniser was unsure; show the text as "please check"), `not_translated` (translate mode, but
+recognition confidence was too low to translate safely — `text` is the transcript in the spoken
+language, so nothing is invented).
 
 **Error codes**
 

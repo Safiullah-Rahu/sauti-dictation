@@ -85,15 +85,18 @@ def cleanup_table() -> None:
 
 
 def translate_table() -> None:
-    r = load("translate.json")
-    if not r:
+    systems = {}
+    for f in sorted(RES.glob("translate*.json")):
+        systems.update(json.loads(f.read_text(encoding="utf-8"))["systems"])
+    if not systems:
         return
-    print("### Translation quality (chrF on FLEURS/FLORES sentences — higher is better)\n")
-    dirs = list(next(iter(r["systems"].values())).keys())
+    print("### Translation quality (chrF on FLEURS/FLORES sentences — higher is better; median seconds per sentence)\n")
+    dirs = ["so-en", "sw-en", "ar-en", "en-so", "en-sw", "en-ar"]
     print("| System | " + " | ".join(dirs) + " |")
     print("|---|" + "---:|" * len(dirs))
-    for name, s in r["systems"].items():
-        print(f"| {name} | " + " | ".join(f"{s[d]['chrf']} ({s[d]['latency_ms_p50']} ms)" if d in s else "—" for d in dirs) + " |")
+    for name, s in systems.items():
+        print(f"| {name} | " + " | ".join(f"{s[d]['chrf']} ({s[d]['latency_ms_p50'] / 1000:.1f} s)" if d in s else "—"
+                                          for d in dirs) + " |")
     print()
 
 

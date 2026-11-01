@@ -10,8 +10,8 @@ marked **estimate**. All recommended models allow commercial use (see [licences.
 | Speech recognition (en, ar, sw) | **Whisper large-v3-turbo**, CTranslate2 int8 | Best accuracy per CPU-second of the commercially usable multilingual models; MIT licence | Whisper large-v3 for accuracy if CPU allows; GPU for latency |
 | Speech recognition (Somali) | **A Somali-capable model routed by language** — candidate: Meta **Omnilingual ASR** (Apache-2.0) | Whisper's Somali accuracy is not usable (measured, below) | Fine-tune on the client's own Somali recordings |
 | Live preview | Whisper small, int8 | ~10× cheaper than turbo; only shown, never inserted | — |
-| Cleanup | **Qwen3-4B-Instruct-2507**, GGUF Q4_K_M on llama.cpp | Strong instruction following at 4B, Apache-2.0, multilingual, runs on CPU | Qwen3-8B / larger on a GPU |
-| Translation | **Qwen3-4B (same model)** by default; **MADLAD-400 3B** as dedicated alternative | Re-uses the loaded LLM; MADLAD covers Somali/Swahili/Arabic and is Apache-2.0 | Choose per direction from measured chrF |
+| Cleanup | **Qwen3-4B-Instruct-2507**, GGUF Q4_K_M on llama.cpp — **English**; rule-based cleanup for Somali, Arabic, Swahili | Measured: the 4B model improves English cleanup but not the other three languages | Qwen3-8B or larger on a GPU, re-measured per language |
+| Translation | **Qwen3-4B (same model)** for Arabic↔English; **MADLAD-400 3B** to be evaluated for Somali and Swahili | Measured: LLM Arabic→English is good (chrF 65), Swahili/Somali→English weak (34 / 24) | Choose per direction from measured chrF |
 | Safety net | Rule-based cleanup + meaning-preservation guard | Guarantees names, numbers, dates, negations and terms survive; falls back instead of guessing | — |
 
 ## Speech recognition
@@ -60,9 +60,10 @@ treated as low accuracy.
 
 * Follows the "fix, don't rewrite" instruction reliably in tests, including refusing to
   follow instructions that are part of the dictation (see benchmarks).
-* Multilingual (Arabic, Swahili well represented; Somali weaker). For languages where the
-  model is weak, `llm.cleanup_languages` can restrict the LLM pass and those languages get
-  rule-based cleanup only.
+* Multilingual, but measured cleanup quality differs by language: for English the LLM pass
+  cuts residual errors from 2.7% to 1.2%; for Somali and Swahili it is slightly worse than
+  the rules, and for Arabic it rewrote words often enough that the guard rejected 40% of its
+  outputs. `llm.cleanup_languages` therefore defaults to `["en"]`.
 * Runs in ~3 GB of RAM. The system prompt and examples are fixed, so llama.cpp keeps them in
   its prompt cache and only the new transcript is processed per request.
 * **Guard:** every LLM output is compared with the input. If a number, negation, name or
@@ -78,7 +79,14 @@ changing the GGUF file in `sauti-llm.service`.
 ## Translation
 
 * **Default: the cleanup LLM** — no extra memory, handles conversational text, keeps names
-  and numbers when told to (and the number check verifies it).
+  and numbers when told to (and the number check verifies it). Measured chrF: Arabic→English
+  65, Swahili→English 34, Somali→English 24 (see benchmarks).
+* **Invented translations.** When recognition is poor, an LLM translates the garbled words
+  into fluent but invented sentences — a direct conflict with "never invent information". The
+  server therefore withholds translation when the recogniser's confidence is below
+  `asr.low_confidence` (default 0.5) and returns the transcript with a `not_translated`
+  notice. Measured examples: garbled Swahili scored 0.46 and garbage Somali 0.32; clean Arabic
+  and English scored 0.90–0.98.
 * **MADLAD-400 3B MT** (Apache-2.0, CTranslate2 int8, ~3 GB) — a dedicated translation model
   covering 400+ languages including Somali and Swahili. Selected per deployment with
   `translate.backend = "ct2"`.

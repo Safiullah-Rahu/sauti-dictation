@@ -3,7 +3,7 @@
 <h1 align="center">Sauti — private AI dictation on your own server</h1>
 
 <p align="center">
-Speak into any app on Windows, macOS or Android and get polished text back in about a second or two.<br>
+Speak into any app on Windows, macOS or Android and get polished text back where your cursor is.<br>
 Speech recognition, cleanup and translation run on <b>your</b> hardware: no cloud AI, no per-minute fees.
 </p>
 
@@ -43,10 +43,24 @@ on its own Proxmox server.
 
 ## Demo
 
-> The demo video is in [`docs/media/sauti-demo.mp4`](docs/media/sauti-demo.mp4). It shows the real
-> Windows tray app dictating into an editor through the real server and models on a
-> CPU-only workstation; speech is played into the app's microphone path from audio files
-> (marked "TEST AUDIO" in the status pill) so the recording is reproducible.
+<table>
+<tr>
+<td width="52%"><img src="docs/media/desktop-dictation.jpg" alt="Dictated text inserted into an editor by the Windows tray app"></td>
+<td><img src="docs/media/admin-under-load.jpg" alt="Admin dashboard while five users dictate"></td>
+</tr>
+<tr>
+<td><sub>Spoken: <i>"Um, hi Sarah. I wanted to let you know that the, uh, the shipment of forty boxes will not arrive on Monday. It will, um, arrive on Thursday the fourteenth instead."</i> — inserted after clean-up. (15.8 s on a busy CPU-only workstation; see benchmarks.)</sub></td>
+<td><sub>Admin overview while five simulated users dictate: live sessions, fair queues, server load. No dictated text is visible to administrators.</sub></td>
+</tr>
+</table>
+
+**Video:** [`docs/media/sauti-demo.mp4`](docs/media/sauti-demo.mp4) (about 2 minutes).
+
+It shows the real Windows tray app dictating into an editor through the real server and models
+on a CPU-only workstation, then the admin dashboard under a five-user load and the user portal.
+Speech is played into the app's microphone path from audio files (the status pill says "TEST
+AUDIO") so the run is reproducible, and every cut of processing time is labelled with the
+seconds removed.
 
 ## How it fits together
 
@@ -69,16 +83,26 @@ Details: [docs/architecture.md](docs/architecture.md) · wire protocol: [docs/pr
 ## Results at a glance
 
 <!-- RESULTS-START -->
-Benchmarks are being finalised; see [docs/benchmarks.md](docs/benchmarks.md).
+Measured on a CPU-only development workstation that was also running other heavy jobs —
+conditions, raw data and estimates for the target server in [docs/benchmarks.md](docs/benchmarks.md).
+
+| | Result |
+|---|---|
+| Recognition, Whisper large-v3-turbo (FLEURS word error rate) | English **4.6%** · Arabic **10.1%** · Swahili **35.3%** · Somali **95%** (not usable — needs a Somali model, routed per language) |
+| Language detection | 100% for English, Arabic, Swahili · 0% for Somali (select Somali manually) |
+| Cleanup (errors left vs. the original sentence) | English 2.7% → **1.2%** with the LLM; for Somali, Arabic, Swahili rules alone are as good → LLM used for English by default |
+| Safety | The guard rejected the one dictated instruction the LLM obeyed; low-confidence speech is not translated (prevents invented translations) |
+| Concurrency | **41/41** dictations completed at 1, 3 and 5 simultaneous users, no errors, no duplicates; fair queueing kept median queue wait < 4 s at 5 users |
+| Latency on this busy CPU | Median 21 s (1 user) to 28 s (5 users) from release to final text — compute-bound. Estimated 4–7 s on a dedicated 9600X VM; a GPU is recommended for ~1 s |
 <!-- RESULTS-END -->
 
 ## Repository layout
 
 | Path | What |
 |---|---|
-| `server/` | Backend: REST + WebSocket API, scheduler, pipeline, model backends, admin dashboard and user portal (`sauti_server/web`). 59 tests. |
+| `server/` | Backend: REST + WebSocket API, scheduler, pipeline, model backends, admin dashboard and user portal (`sauti_server/web`). 61 tests. |
 | `desktop/` | Windows / macOS tray app (PySide6). Network-client and Windows end-to-end tests. |
-| `android/` | Android voice keyboard (Kotlin). Pure-Kotlin `core` protocol module with 48 tests; `app` module with the IME. |
+| `android/` | Android voice keyboard (Kotlin). Pure-Kotlin `core` protocol module with 49 tests (one runs against a live server); `app` module with the IME. |
 | `bench/` | Accuracy, cleanup, translation, mixed-language and concurrent-user benchmarks. |
 | `deploy/` | Proxmox VM script, installer, systemd units, Caddy config, backup and update scripts. |
 | `docs/` | Architecture, protocol, models, benchmarks, deployment, user / admin guides, privacy, licences. |

@@ -6,6 +6,16 @@
         "chrf": 23.8,
         "latency_ms_p50": 6197,
         "latency_ms_p95": 10702
+      },
+      "sw-en": {
+        "chrf": 33.8,
+        "latency_ms_p50": 3266,
+        "latency_ms_p95": 5319
+      },
+      "ar-en": {
+        "chrf": 64.9,
+        "latency_ms_p50": 2998,
+        "latency_ms_p95": 5350
       }
     }
   },
@@ -15,6 +25,20 @@
       "dir": "so-en",
       "src": "U.N. waxa ay rajeynayaan in ay soo gabagabeeyaan lacago lagu caawinayo dalalka ay kulaylka caalamka saameeyay si ay ula tacaalan dhibteeda.",
       "hyp": "The U.N. is being criticized for not taking adequate action against the ongoing violence that is escalating.",
+      "ref": "The U.N. also hopes to finalize a fund to help countries affected by global warming to cope with the impacts."
+    },
+    {
+      "system": "llm:qwen3-4b-instruct",
+      "dir": "sw-en",
+      "src": "Umoja wa Mataifa pia una matumaini ya kumaliza ufadhili wa kusaidia mataifa yaliyoathirika kutokana na ongezeko la joto duniani ili kuweza kupambana na athari.",
+      "hyp": "International unity also has the commitment to promote the cooperation of countries facing common challenges in order to achieve common goals.",
+      "ref": "The U.N. also hopes to finalize a fund to help countries affected by global warming to cope with the impacts."
+    },
+    {
+      "system": "llm:qwen3-4b-instruct",
+      "dir": "ar-en",
+      "src": "وتأمل الأمم المتحدة أيضاً في وضع اللمسات الأخيرة على صندوق لمساعدة البلدان المتأثرة من ظاهرة الاحتباس الحراري للتعامل مع آثاره.",
+      "hyp": "The United Nations also envisages finalizing a fund to assist countries affected by the effects of climate change in addressing its impacts.",
       "ref": "The U.N. also hopes to finalize a fund to help countries affected by global warming to cope with the impacts."
     }
   ]

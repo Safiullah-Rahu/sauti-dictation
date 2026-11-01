@@ -1,0 +1,161 @@
+{
+  "model": "faster-whisper-large-v3-turbo",
+  "pairs": {
+    "en+so": {
+      "single_window": {
+        "wer_first": 0.0,
+        "wer_second": 1.0
+      },
+      "per_segment_lid": {
+        "wer_first": 0.0,
+        "wer_second": 1.0
+      },
+      "detected_first_window": {
+        "en": 3
+      }
+    },
+    "so+en": {
+      "single_window": {
+        "wer_first": 1.0,
+        "wer_second": 0.047
+      },
+      "per_segment_lid": {
+        "wer_first": 1.0,
+        "wer_second": 0.022
+      },
+      "detected_first_window": {
+        "en": 3
+      }
+    },
+    "en+ar": {
+      "single_window": {
+        "wer_first": 0.667,
+        "wer_second": 0.333
+      },
+      "per_segment_lid": {
+        "wer_first": 0.667,
+        "wer_second": 0.333
+      },
+      "detected_first_window": {
+        "ar": 2,
+        "en": 1
+      }
+    },
+    "ar+en": {
+      "single_window": {
+        "wer_first": 0.767,
+        "wer_second": 0.51
+      },
+      "per_segment_lid": {
+        "wer_first": 0.767,
+        "wer_second": 0.51
+      },
+      "detected_first_window": {
+        "ar": 1,
+        "en": 2
+      }
+    },
+    "en+sw": {
+      "single_window": {
+        "wer_first": 0.333,
+        "wer_second": 0.722
+      },
+      "per_segment_lid": {
+        "wer_first": 0.333,
+        "wer_second": 0.722
+      },
+      "detected_first_window": {
+        "sw": 1,
+        "en": 2
+      }
+    },
+    "sw+en": {
+      "single_window": {
+        "wer_first": 0.8,
+        "wer_second": 0.376
+      },
+      "per_segment_lid": {
+        "wer_first": 0.8,
+        "wer_second": 0.376
+      },
+      "detected_first_window": {
+        "sw": 1,
+        "en": 2
+      }
+    }
+  },
+  "examples": [
+    {
+      "pair": "en+so",
+      "mode": "single_window",
+      "hyp": "Such things have become separate disciplines which focus on providing solutions to real-life problems.",
+      "ref": "Such things have become separate disciplines, which focus on providing solutions to real life problems. | Si fiican ayay mugdiga wax ugu arki karaan iyagoo adeegsanaya aragti habeeneedkooda, iyagoo sidoo kale si dhabbacasho ah u soconaaya. Guduudanayaashu waxay ugaadhoodu ugaadhsadaan iyagoo isku qarinaya deegaankooda oo ku dul boodaya ugaadhooda."
+    },
+    {
+      "pair": "en+so",
+      "mode": "per_segment_lid",
+      "hyp": "Such things have become separate disciplines which focus on providing solutions to real-life problems.",
+      "ref": "Such things have become separate disciplines, which focus on providing solutions to real life problems. | Si fiican ayay mugdiga wax ugu arki karaan iyagoo adeegsanaya aragti habeeneedkooda, iyagoo sidoo kale si dhabbacasho ah u soconaaya. Guduudanayaashu waxay ugaadhoodu ugaadhsadaan iyagoo isku qarinaya deegaankooda oo ku dul boodaya ugaadhooda."
+    },
+    {
+      "pair": "so+en",
+      "mode": "single_window",
+      "hyp": "Next, some saddles, particularly English saddles, have safety bars that allow a stir up leather to fall off the saddle if pulled backwards by a falling rider.",
+      "ref": "Aqoonyahanada sayniska ayaa sheegaan in dufka xayawaankani uu kor ka ahaa midab kafe hoosna ka ahaa midib furan ama midib cas. | Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider."
+    },
+    {
+      "pair": "so+en",
+      "mode": "per_segment_lid",
+      "hyp": "Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider.",
+      "ref": "Aqoonyahanada sayniska ayaa sheegaan in dufka xayawaankani uu kor ka ahaa midab kafe hoosna ka ahaa midib furan ama midib cas. | Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider."
+    },
+    {
+      "pair": "en+ar",
+      "mode": "single_window",
+      "hyp": "يشير العلم الآن إلى أن هذا الاقتصاد الضخم المعتمد على الكربون قد أزاح المحيط الحيوي من إحدى حالاته المستقرة التي دعمت التطور البشري على مدى المليوني سنة الماضية",
+      "ref": "Such things have become separate disciplines, which focus on providing solutions to real life problems. | يشير العلم الآن إلى أن هذا الاقتصاد الضخم المعتمد على الكربون قد أزاح المحيط الحيوي من إحدى حالاته المستقرة التي دعمت التطور البشري على مدى المليوني سنةٍ الماضية."
+    },
+    {
+      "pair": "en+ar",
+      "mode": "per_segment_lid",
+      "hyp": "يشير العلم الآن إلى أن هذا الاقتصاد الضخم المعتمد على الكربون قد أزاح المحيط الحيوي من إحدى حالاته المستقرة التي دعمت التطور البشري على مدى المليوني سنة الماضية",
+      "ref": "Such things have become separate disciplines, which focus on providing solutions to real life problems. | يشير العلم الآن إلى أن هذا الاقتصاد الضخم المعتمد على الكربون قد أزاح المحيط الحيوي من إحدى حالاته المستقرة التي دعمت التطور البشري على مدى المليوني سنةٍ الماضية."
+    },
+    {
+      "pair": "ar+en",
+      "mode": "single_window",
+      "hyp": "ينسكب الماء من فوق الصد في جزء بعض ميت قدم",
+      "ref": "ينسكِب الماء من فوق السدّ في جزء بعرض 100 قدم. | Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider."
+    },
+    {
+      "pair": "ar+en",
+      "mode": "per_segment_lid",
+      "hyp": "ينسكب الماء من فوق الصد في جزء بعض ميت قدم",
+      "ref": "ينسكِب الماء من فوق السدّ في جزء بعرض 100 قدم. | Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider."
+    },
+    {
+      "pair": "en+sw",
+      "mode": "single_window",
+      "hyp": "Njia za maji za barani zinaweza kuwa mandari mzuri ya kufanya likizo.",
+      "ref": "Such things have become separate disciplines, which focus on providing solutions to real life problems. | Njia za maji za barani zinaweza kuwa mandhari mzuri ya kufanyia likizo."
+    },
+    {
+      "pair": "en+sw",
+      "mode": "per_segment_lid",
+      "hyp": "Njia za maji za barani zinaweza kuwa mandari mzuri ya kufanya likizo.",
+      "ref": "Such things have become separate disciplines, which focus on providing solutions to real life problems. | Njia za maji za barani zinaweza kuwa mandhari mzuri ya kufanyia likizo."
+    },
+    {
+      "pair": "sw+en",
+      "mode": "single_window",
+      "hyp": "Hapo mwanzoni, mavazi ya liadhiriwa na madoni za byzantini kutoka mashariki.",
+      "ref": "Hapo mwanzoni mavazi yaliathiriwa na tamaduni za Baizantini kutoka mashariki. | Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider."
+    },
+    {
+      "pair": "sw+en",
+      "mode": "per_segment_lid",
+      "hyp": "Hapo mwanzoni, mavazi ya liadhiriwa na madoni za byzantini kutoka mashariki.",
+      "ref": "Hapo mwanzoni mavazi yaliathiriwa na tamaduni za Baizantini kutoka mashariki. | Next, some saddles, particularly English saddles, have safety bars that allow a stirrup leather to fall off the saddle if pulled backwards by a falling rider."
+    }
+  ]
+}
